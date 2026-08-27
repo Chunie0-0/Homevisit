@@ -7,6 +7,8 @@
 | ไฟล์ | ใช้ทำอะไร |
 |---|---|
 | **`homevisit_form_v1.html`** | ฟอร์มหลัก — เปิดบน iPad ได้เลย (ไฟล์เดียว ไม่ต้องอินเทอร์เน็ต) |
+| **`dist/homevisit_form_fillable.pdf`** | PDF AcroForm สำหรับเปิดในคอมแล้วพิมพ์/ติ๊กได้ ครบทุกหมวด |
+| `tools/pdf_export/` | เครื่องมือสร้าง PDF กรอกได้ และดึงข้อมูล PDF เป็น JSON |
 | `latex-reference/` | ต้นฉบับ LaTeX + PDF + font จาก Overleaf (สำรองไว้ ไม่ต้องแก้) |
 | `README.md` | ไฟล์นี้ |
 
@@ -25,6 +27,18 @@
 - **Export Markdown** → ข้อความสรุป (เฉพาะส่วนที่กรอก) ใช้ทำ **สไลด์** (Marp / Google Slides / Canva) หรือโน้ต
 - **Export LaTeX** → ไฟล์ `.tex` สำเร็จรูป *compile ได้เลยใน Overleaf* (Compiler: XeLaTeX; project ต้องมี `fonts/` เหมือนเดิม) — ข้อความสรุปนี้เอาไปรวมกับ `main.tex` ฉบับเต็มก็ได้
 - **🖨 พิมพ์** → พิมพ์เฉพาะส่วนที่มีข้อมูล (ถ้าเปิดบน iPad กด แล้วเลือก Save as PDF ได้)
+
+## Workflow: PDF → JSON → LaTeX + Marp
+
+ถ้าต้องการกรอกในคอม ให้เปิด `dist/homevisit_form_fillable.pdf` แล้ว Save ไฟล์หลังกรอกเสร็จ จากนั้นดึงข้อมูลเป็น JSON:
+
+```bash
+python3 tools/pdf_export/extract_pdf_data.py \
+  dist/completed_homevisit.pdf \
+  -o dist/homevisit_data.json
+```
+
+ไฟล์ `homevisit_data.json` เป็นข้อมูลกลางสำหรับนำไปสร้างรายงาน **LaTeX** และสไลด์ **Marp** ต่อไป โดยรายละเอียดการสร้าง/ตรวจสอบ PDF อยู่ที่ `tools/pdf_export/README.md`
 
 กดปุ่ม **＋ ผู้ป่วยใหม่** เพื่อเริ่มข้อมูลคนใหม่ (แนะนำให้ Export JSON สำรองก่อน)
 

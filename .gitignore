@@ -1,0 +1,5 @@
+# PDF build intermediates and extracted patient data
+.DS_Store
+dist/homevisit_form_base.pdf
+dist/homevisit_data.json
+dist/._overlay_*.pdf
