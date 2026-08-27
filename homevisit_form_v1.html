@@ -555,7 +555,7 @@ input[readonly], textarea[readonly]{background:#eef3f8; color:var(--navy); font-
           <div class="fg"><label class="lab">adverse effect</label><input type="text" data-k="inhomes.med.ae"></div>
         </div>
         <div class="fg">
-          <div class="lab">Medication Record — ตารางยา (ยา/ความแรง · ขนาด · ความถี่ · ข้อบ่งชี้ · วันที่เปลี่ยน · Adherence/AE)</div>
+          <div class="lab">Medication Record — ตารางยา (แนะนำให้เขียนคำสั่งยาแบบย่อเป็นบรรทัดเดียว เช่น gabapentin (300) 1 tab PO TID PC)</div>
           <div class="rep-body" data-rep="medications"></div>
           <button type="button" class="add" data-add="medications">+ เพิ่มแถวยา</button>
         </div>
@@ -1272,9 +1272,10 @@ input[readonly], textarea[readonly]{background:#eef3f8; color:var(--navy); font-
   <div class="row-card">
     <button type="button" class="rm" aria-label="ลบแถว">✕</button>
     <div class="grid">
-      <input type="text" data-k="drug" data-label="ยา/ความแรง" placeholder="ยา / ความแรง">
-      <input type="text" data-k="dose" data-label="ขนาด/ทางให้" placeholder="ขนาดและทางให้">
-      <input type="text" data-k="freq" data-label="ความถี่" placeholder="ความถี่">
+      <input type="text" class="full" data-k="sig" data-label="คำสั่งยาแบบย่อ (sig)" placeholder="gabapentin (300) 1 tab PO TID PC">
+      <input type="text" data-k="drug" data-label="ยา/ความแรง" placeholder="gabapentin (300)">
+      <input type="text" data-k="dose" data-label="ขนาด/ทางให้" placeholder="1 tab PO">
+      <input type="text" data-k="freq" data-label="ความถี่/เวลา" placeholder="TID PC">
       <input type="text" data-k="ind" data-label="ข้อบ่งชี้" placeholder="ข้อบ่งชี้">
       <input type="date" data-k="changed" data-label="วันที่เปลี่ยน">
       <input type="text" data-k="adh" data-label="Adherence/AE" placeholder="Adherence / AE">
