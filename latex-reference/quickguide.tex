@@ -1,0 +1,15 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper,margin=1.5cm]{geometry}\usepackage{fontspec}\usepackage{polyglossia}\setdefaultlanguage{thai}\setotherlanguage{english}\setmainfont{DejaVu Sans}\IfFileExists{fonts/NotoSansThai-Regular.ttf}{\newfontfamily\thaifont[Path=fonts/]{NotoSansThai-Regular.ttf}}{\newfontfamily\thaifont{Noto Sans Thai}}\newfontfamily\englishfont{DejaVu Sans}\usepackage{ucharclasses}\setTransitionsForLatin{\englishfont}{\thaifont}\usepackage[table]{xcolor}\usepackage{tabularx,enumitem,tcolorbox,fancyhdr,lastpage}\definecolor{navy}{HTML}{1F4E79}\definecolor{bluegray}{HTML}{EAF2F8}\pagestyle{fancy}\fancyhf{}\lhead{\textcolor{gray}{HOME VISIT QUICK GUIDE}}\rhead{\textcolor{gray}{Digital Home Visit}}\cfoot{หน้า \thepage\ / \pageref{LastPage}}\setlength{\parindent}{0pt}\setlist[itemize]{leftmargin=1.2em,itemsep=2pt}
+\newcommand{\st}[1]{\vspace{4pt}\begin{tcolorbox}[colback=navy,colframe=navy,boxrule=0pt,arc=1pt,left=5pt,right=5pt,top=3pt,bottom=3pt]\color{white}\large\textbf{#1}\end{tcolorbox}}
+\begin{document}
+\begin{center}{\Huge\textcolor{navy}{\textbf{คู่มือการใช้แฟ้มเยี่ยมบ้าน}}}\\[3pt]{\Large Complete Digital Home Visit Family Folder}\end{center}
+แฟ้มนี้ใช้ประเมินผู้ป่วย ครอบครัว ผู้ดูแล บ้าน และแผนติดตามต่อเนื่อง\\ โดยกรอกเฉพาะส่วนที่เกี่ยวข้องกับบริบทของผู้ป่วย
+\st{ครั้งแรก / Baseline visit}
+\begin{tabularx}{\textwidth}{|c|X|}\hline\rowcolor{navy}\color{white}ลำดับ&\color{white}ต้องกรอก\\\hline 1&Cover, patient data, address, map, genogram, family census\\\hline 2&Present illness, past/social history, investigations\\\hline 3&INHOMESSS ครบทุก domain\\\hline 4&Patient agenda และ caregiver agenda\\\hline 5&Family structure/process/stress และ problem list\\\hline 6&ACP / palliative module เมื่อมีข้อบ่งชี้\\\hline 7&สรุปแผน ผู้รับผิดชอบ และวันติดตาม\\\hline\end{tabularx}
+\st{ทุกครั้งที่ติดตาม / Follow-up visit}
+\begin{itemize}\item เริ่มจากอาการเปลี่ยนแปลงตั้งแต่ครั้งก่อน, vital signs, function และ symptom score\item ทบทวนยา การใช้ยา ผลข้างเคียง และยา PRN\item อัปเดตบ้าน ความปลอดภัย ผู้ดูแล และ caregiver burden เมื่อภาระเพิ่มขึ้น\item อัปเดต PPS/ADL, nutrition, bowel, skin/wound และ ACP เมื่อสถานการณ์เปลี่ยน\item บันทึก assessment, action plan, referral และผู้รับผิดชอบให้ชัดเจน\item อัปเดต Longitudinal Trajectory เพื่อเห็นแนวโน้มอย่างน้อย 6 visits\end{itemize}
+\st{ใช้ Palliative module เมื่อ}
+\begin{itemize}\item ผู้ป่วยมี serious illness, advanced cancer, progressive organ failure\\ หรือความต้องการดูแลแบบประคับประคอง\item มี pain, dyspnea, nausea, delirium, secretion หรือ breakthrough symptoms\item มีการคุย goals of care, DNR/ACP หรือ preferred place of care/death\item มี caregiver burden, family conflict หรือ conspiracy of silence\end{itemize}
+\st{Safety reminders}
+\begin{itemize}\item แบบฟอร์มเป็นเครื่องมือบันทึก ไม่แทน clinical judgement หรือคำสั่งการรักษา\item ตรวจ red flags และ escalation threshold ทุกครั้ง\item ระบุผู้รับผิดชอบและวันติดตามเสมอ\item ทบทวน ACP เมื่อโรคหรือความต้องการของผู้ป่วยเปลี่ยน\end{itemize}
+\end{document}

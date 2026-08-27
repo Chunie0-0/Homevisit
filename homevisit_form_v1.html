@@ -1,0 +1,1864 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1F4E79">
+<title>แฟ้มเยี่ยมบ้าน — Digital Home Visit (iPad)</title>
+<style>
+:root{
+  --navy:#1F4E79; --blue:#EAF2F8; --line:#cbd5e1; --ink:#222; --muted:#5b6b7a;
+  --card:#ffffff; --bg:#f4f6f8; --ok:#2e7d32; --warn:#b26a00;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; padding:0 0 96px 0;
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Thai", "Noto Sans Thai", "Helvetica Neue", sans-serif;
+  font-size:17px; line-height:1.45;
+}
+button{font-family:inherit; font-size:inherit;}
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30;
+  background:var(--navy); color:#fff;
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; padding-top:calc(10px + env(safe-area-inset-top));
+}
+.topbar .t1{font-size:1.05rem; font-weight:700; line-height:1.15;}
+.topbar .t2{font-size:.72rem; opacity:.85; font-weight:400;}
+.topbar .status{margin-left:auto; font-size:.72rem; opacity:.9; white-space:nowrap;}
+.btn{
+  border:0; border-radius:10px; padding:9px 14px; font-weight:600; cursor:pointer;
+  background:#fff; color:var(--navy); font-size:.9rem;
+}
+.btn.ghost{background:rgba(255,255,255,.14); color:#fff;}
+.btn.blue{background:var(--navy); color:#fff;}
+.btn.ok{background:var(--ok); color:#fff;}
+.btn:active{opacity:.85;}
+/* ---------- nav chips ---------- */
+.nav{
+  position:sticky; top:62px; z-index:25;
+  background:#fff; border-bottom:1px solid var(--line);
+  display:flex; gap:6px; overflow-x:auto; padding:8px 10px;
+  -webkit-overflow-scrolling:touch;
+}
+.nav button{
+  flex:0 0 auto; border:1px solid var(--line); background:var(--blue);
+  color:var(--navy); border-radius:999px; padding:7px 13px; font-size:.82rem; font-weight:600; cursor:pointer;
+}
+.nav button:active{background:#d5e6f2;}
+/* ---------- help ---------- */
+.help{max-width:900px; margin:12px auto 0; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+.help summary{padding:12px 16px; font-weight:700; color:var(--navy); cursor:pointer; background:var(--blue); font-size:.95rem;}
+.help .body{padding:4px 16px 14px; font-size:.9rem; color:#333;}
+.help ul{margin:.4em 0 .8em; padding-left:1.2em;}
+.help h4{margin:.8em 0 .2em; color:var(--navy);}
+/* ---------- sections ---------- */
+section{
+  max-width:900px; margin:14px auto 0; background:var(--card);
+  border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 1px 3px rgba(16,42,67,.06);
+}
+section > h2{
+  margin:0; padding:12px 16px; background:var(--navy); color:#fff;
+  font-size:1.02rem; display:flex; align-items:center; justify-content:space-between; gap:8px;
+}
+section > h2 .no{opacity:.75; font-size:.78rem; font-weight:600;}
+.sbody{padding:14px; display:flex; flex-direction:column; gap:13px;}
+.subblock{border:1px solid #dbe4ec; border-radius:12px; overflow:hidden; background:#fcfdfe;}
+.subblock h3{
+  margin:0; padding:9px 14px; background:var(--blue); color:var(--navy);
+  font-size:.95rem; display:flex; align-items:center; justify-content:space-between;
+}
+.subblock .sbody{padding:12px; gap:12px;}
+/* ---------- fields ---------- */
+.fg{display:flex; flex-direction:column; gap:4px;}
+.fg .lab{font-size:.8rem; font-weight:700; color:var(--muted);}
+input[type=text], input[type=number], input[type=date], input[type=tel], select, textarea{
+  width:100%; box-sizing:border-box; font-family:inherit; font-size:1rem;
+  padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink);
+  -webkit-appearance:none; appearance:none;
+}
+textarea{min-height:46px; resize:vertical; line-height:1.5;}
+input[type=number]{font-variant-numeric:tabular-nums;}
+select{background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%235b6b7a' stroke-width='1.6' fill='none'/></svg>") no-repeat right 12px center; padding-right:34px;}
+.fg .unit{font-size:.78rem; color:var(--muted); margin-top:2px;}
+.inrow{display:flex; gap:10px; flex-wrap:wrap;}
+.inrow .fg{flex:1; min-width:110px;}
+.inline-nums{display:flex; flex-wrap:wrap; gap:8px;}
+.inline-nums .ni{display:flex; align-items:center; gap:6px; background:#fafbfc; border:1px solid #e3eaf1; border-radius:10px; padding:5px 9px;}
+.inline-nums .ni span{font-size:.8rem; color:var(--muted); white-space:nowrap;}
+.inline-nums .ni input{width:58px; padding:7px 6px; text-align:center;}
+/* ---------- checkbox chips ---------- */
+.cg{border:1px solid #e3eaf1; border-radius:12px; padding:8px 10px; background:#fafbfc; display:flex; flex-wrap:wrap; gap:6px;}
+.cg .lab{width:100%; font-size:.78rem; font-weight:700; color:var(--muted); margin-bottom:2px;}
+.ck{display:inline-flex; align-items:center; justify-content:center; gap:.35em; min-height:28px; padding:2px 8px; border:1px solid var(--line); border-radius:7px; background:#fff; cursor:pointer; user-select:none; font-size:.8rem; font-weight:600; color:var(--ink);}
+.ck input{display:none;}
+.ck span{
+  display:flex; align-items:center; line-height:1.45;
+}
+.ck span::before{
+  content:""; display:flex; align-items:center; justify-content:center;
+  width:1.05em; height:1.05em; flex:0 0 1.05em;
+  border:1.5px solid #8fa3b5; border-radius:4px; background:#fff;
+  text-align:center; line-height:1; font-size:.95em; box-sizing:border-box;
+}
+.ck:has(input:checked), .ck.on{background:var(--blue); border-color:var(--navy); color:var(--navy);}
+.ck input:checked + span::before, .ck.on span::before{background:var(--navy); border-color:var(--navy); content:"✓"; color:#fff;}
+/* ---------- questionnaire blocks (Zarit / 2Q / 9Q) ---------- */
+.qz{border:1px solid #dbe4ec; border-radius:12px; background:#fcfdfe; overflow:hidden;}
+.qz .qz-head{background:var(--blue); color:var(--navy); font-weight:700; padding:9px 14px; font-size:.92rem;}
+.qz .qz-body{padding:12px; display:flex; flex-direction:column; gap:11px;}
+.q-item{border-left:3px solid var(--blue); padding:2px 0 2px 10px;}
+.q-item .q-text{font-size:.92rem; margin-bottom:7px; font-weight:600; color:#333;}
+.q-opt{display:grid; grid-template-columns:repeat(auto-fit, minmax(96px, 1fr)); gap:6px;}
+.q-note{font-size:.8rem; color:var(--muted); background:#f4f7fa; border-radius:8px; padding:7px 10px; line-height:1.5;}
+.qz-out{background:#f5f9fc; border:1px dashed #b9c9d8; border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:9px;}
+input[readonly], textarea[readonly]{background:#eef3f8; color:var(--navy); font-weight:700;}
+[hidden]{display:none !important;}
+/* ---------- repeaters ---------- */
+.rep-body{display:flex; flex-direction:column; gap:9px;}
+.row-card{position:relative; border:1px dashed #ccd8e3; border-radius:12px; padding:12px 36px 12px 10px; background:#fff;}
+.row-card .grid{display:grid; gap:8px; grid-template-columns:repeat(2,1fr);}
+.row-card .grid.c3{grid-template-columns:repeat(3,1fr);}
+.row-card .grid .full{grid-column:1 / -1;}
+.row-card input, .row-card select, .row-card textarea{font-size:.92rem; padding:8px 10px;}
+.rm{
+  position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%;
+  border:1px solid #e0b3b3; background:#fdecec; color:#b3261e; font-weight:700; cursor:pointer; line-height:1;
+}
+.add{
+  border:1.5px dashed var(--navy); background:transparent; color:var(--navy);
+  border-radius:10px; padding:9px; font-weight:700; cursor:pointer; font-size:.9rem;
+}
+/* ---------- sliders ---------- */
+.rng{display:flex; align-items:center; gap:10px;}
+.rng input[type=range]{flex:1; accent-color:var(--navy); height:34px;}
+.rng output{
+  min-width:44px; text-align:center; font-weight:800; font-size:1.05rem; color:var(--navy);
+  background:var(--blue); border-radius:9px; padding:4px 6px;
+}
+/* ---------- footer export bar ---------- */
+.footerbar{
+  position:fixed; left:0; right:0; bottom:0; z-index:40;
+  background:#fff; border-top:1px solid var(--line);
+  padding:10px 14px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
+  display:flex; gap:10px; align-items:center; justify-content:center;
+}
+.footerbar .btn{flex:1; max-width:240px; text-align:center;}
+/* ---------- modal ---------- */
+#modal{display:none; position:fixed; inset:0; z-index:60; background:rgba(10,25,40,.5); align-items:center; justify-content:center; padding:16px;}
+#modal.open{display:flex;}
+#modal .card{background:#fff; border-radius:14px; width:100%; max-width:760px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden;}
+#modal .head{background:var(--navy); color:#fff; padding:10px 14px; font-weight:700; display:flex; justify-content:space-between; align-items:center; font-size:.95rem;}
+#modal .head .x{background:none; border:0; color:#fff; font-size:1.3rem; cursor:pointer;}
+#modal textarea{flex:1; width:100%; min-height:280px; border:0; border-bottom:1px solid var(--line); border-radius:0; font-size:.85rem; font-family:ui-monospace, Menlo, monospace; padding:12px; resize:none;}
+#modal .foot{display:flex; gap:10px; padding:10px 14px; flex-wrap:wrap;}
+#modal .foot .btn{flex:1; min-width:120px; text-align:center;}
+#modal .hint{font-size:.78rem; color:var(--muted); padding:0 14px 8px;}
+/* ---------- print ---------- */
+@media print{
+  body{background:#fff; padding:0; font-size:12pt;}
+  .topbar, .nav, .help, .add, .rm, .footerbar, #modal, .hint{display:none !important;}
+  section{max-width:100%; margin:3mm 0; box-shadow:none; border:1px solid #999; border-radius:3px; break-inside:avoid;}
+  section > h2{padding:7px 10px; font-size:12pt;}
+  .subblock{border-color:#999; break-inside:avoid;}
+  .ck span::before{content:""; width:.95em; height:.95em;}
+  .ck input:checked + span::before{background:var(--navy); content:"✓"; color:#fff; border-color:var(--navy);}
+  .rng output{display:none;}
+  .rng input[type=range]{appearance:none; -webkit-appearance:none; border:1px solid #999; border-radius:6px; height:14px; background:#fff;}
+  input, textarea, select{border-color:#999; background:#fff;}
+  body.print-filled section.empty{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div>
+    <div class="t1">แฟ้มเยี่ยมบ้าน ✚</div>
+    <div class="t2">Digital Home Visit Family Folder · iPad</div>
+  </div>
+  <span class="status" id="status"></span>
+</header>
+
+<nav class="nav" id="nav">
+  <button data-goto="sec-cover">ผู้ป่วย</button>
+  <button data-goto="sec-p1">P1 ครอบครัว</button>
+  <button data-goto="sec-p2">P2 ผู้ป่วย</button>
+  <button data-goto="sec-p3">P3 INHOMESSS</button>
+  <button data-goto="sec-p4">P4 ครอบครัว</button>
+  <button data-goto="sec-p5">P5 Palliative</button>
+  <button data-goto="sec-p6">P6 ปัญหา</button>
+  <button data-goto="sec-p7">P7 ผู้ดูแล</button>
+  <button data-goto="sec-p8">P8 ติดตาม</button>
+  <button data-goto="sec-traj">แนวโน้ม</button>
+</nav>
+
+<details class="help" open>
+  <summary>📖 วิธีใช้ (ย่อจาก Quick Guide)</summary>
+  <div class="body">
+    <h4>ครั้งแรก / Baseline</h4>
+    <ul>
+      <li>ข้อมูลผู้ป่วย + แผนที่ + สมาชิกครอบครัว/Genogram</li>
+      <li>Present illness, ประวัติส่วนตัว, การตรวจเพิ่มเติม</li>
+      <li>INHOMESSS ครบทุกหมวด · Patient/Caregiver agenda · Family structure</li>
+      <li>ACP/Palliative module เมื่อมีข้อบ่งชี้ · สรุปแผน + วันติดตาม</li>
+    </ul>
+    <h4>ทุกครั้งที่ติดตาม</h4>
+    <ul>
+      <li>อาการเปลี่ยนแปลง, vital signs, function, symptom score (แถบเลื่อน)</li>
+      <li>ทบทวนยา · อัปเดตบ้าน/ผู้ดูแล · PPS/ADL, nutrition, bowel, skin</li>
+      <li>บันทึก assessment, plan, referral + อัปเดต Longitudinal Trajectory</li>
+    </ul>
+    <h4>การทำงาน</h4>
+    <ul>
+      <li>บันทึกอัตโนมัติในเครื่อง (ไม่ต้องกด save) — เปิดใหม่ข้อมูลยังอยู่</li>
+      <li>กด <b>Export</b> เลือก: <b>Markdown</b> (สรุป/สไลด์) · <b>LaTeX</b> (วางใน Overleaf) · <b>JSON</b> (สำรอง) · <b>พิมพ์</b></li>
+      <li>กด <b>ผู้ป่วยใหม่</b> เพื่อล้างฟอร์มเริ่มคนใหม่</li>
+    </ul>
+  </div>
+</details>
+
+<main>
+
+<!-- ============ COVER ============ -->
+<section id="sec-cover" data-title="ข้อมูลผู้ป่วยหลัก">
+  <h2>ข้อมูลผู้ป่วยหลัก <span class="no">หน้าแรก</span></h2>
+  <div class="sbody">
+    <div class="inrow">
+      <div class="fg"><label class="lab" for="f-name">ชื่อ-สกุล</label><input id="f-name" type="text" data-k="patient.name" placeholder="ชื่อ นามสกุล"></div>
+      <div class="fg"><label class="lab" for="f-hn">HN</label><input id="f-hn" type="text" data-k="patient.hn" placeholder="เลข HN" inputmode="numeric"></div>
+      <div class="fg"><label class="lab" for="f-cid">CID</label><input id="f-cid" type="text" data-k="patient.cid" placeholder="เลขประชาชน" inputmode="numeric"></div>
+    </div>
+    <div class="inrow">
+      <div class="fg"><label class="lab" for="f-birth">วันเกิด</label><input id="f-birth" type="date" data-k="patient.birth"></div>
+      <div class="fg"><label class="lab" for="f-age">อายุ</label><input id="f-age" type="number" data-k="patient.age" placeholder="ปี" inputmode="numeric" min="0" max="130"></div>
+      <div class="fg"><label class="lab" for="f-sex">เพศ</label>
+        <select id="f-sex" data-k="patient.sex"><option value="">— เลือก —</option><option>ชาย</option><option>หญิง</option><option>อื่น ๆ</option></select>
+      </div>
+      <div class="fg"><label class="lab" for="f-first">วันที่เยี่ยมครั้งแรก</label><input id="f-first" type="date" data-k="patient.firstvisit"></div>
+    </div>
+    <div class="fg"><label class="lab" for="f-addr">ที่อยู่ / โทรศัพท์</label><textarea id="f-addr" rows="2" data-k="patient.address" placeholder="บ้านเลขที่ หมู่ ตำบล เบอร์โทร"></textarea></div>
+    <div class="cg">
+      <div class="lab">สิทธิการรักษา</div>
+      <label class="ck"><input type="checkbox" data-k="patient.insurance.uc"><span>UC</span></label>
+      <label class="ck"><input type="checkbox" data-k="patient.insurance.gov"><span>ข้าราชการ</span></label>
+      <label class="ck"><input type="checkbox" data-k="patient.insurance.sso"><span>ประกันสังคม</span></label>
+      <label class="ck"><input type="checkbox" data-k="patient.insurance.other"><span>อื่น ๆ</span></label>
+    </div>
+    <div class="fg"><label class="lab" for="f-dx">การวินิจฉัยหลัก / โรคร่วม</label><textarea id="f-dx" rows="2" data-k="patient.dx" placeholder="DX หลัก, โรคประจำตัวร่วม"></textarea></div>
+    <div class="fg"><label class="lab" for="f-cg">ผู้ดูแลหลัก / โทรศัพท์</label><input id="f-cg" type="text" data-k="patient.caregiver" placeholder="ชื่อผู้ดูแล + เบอร์"></div>
+    <div class="fg"><label class="lab" for="f-reason">เหตุผลส่งเยี่ยม / ปัญหาหลัก</label><textarea id="f-reason" rows="2" data-k="patient.reason" placeholder="เช่น หลังนอนติดเตียง 1 เดือน ต้องการประเมินการดูแล"></textarea></div>
+    <div class="fg"><label class="lab" for="f-map">แผนที่บ้านโดยสังเขป <span style="font-weight:400">(ระบุทิศเหนือ / จุดสังเกต — วาดในกระดาษแล้วถ่ายรูป หรือเขียนคำอธิบาย)</span></label><textarea id="f-map" rows="3" data-k="patient.map"></textarea></div>
+  </div>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section id="sec-p1" data-title="PART 1 | ครอบครัว และ Genogram">
+  <h2>PART 1 · ครอบครัว และ Genogram <span class="no">สมาชิก + เส้นทาง</span></h2>
+  <div class="sbody">
+    <div class="subblock">
+      <h3>สมาชิกในครัวเรือน (Family Census)</h3>
+      <div class="sbody">
+        <div class="fg">
+          <div class="lab">สมาชิก</div>
+          <div class="rep-body" data-rep="family.members"></div>
+          <button type="button" class="add" data-add="family.members">+ เพิ่มสมาชิก</button>
+        </div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Family Genogram</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab" for="f-geno">Genogram (วงศ์ตระกูล) — วาด/หมายเหตุ</label><textarea id="f-geno" rows="3" data-k="family.genogram" placeholder="หรืออธิบายโครงสร้างครอบครัว"></textarea></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Route / Access</h3>
+      <div class="sbody">
+        <div class="inrow">
+          <div class="fg"><label class="lab">จาก PCU / รพ.สต. — ระยะทาง (กม.)</label><input type="number" data-k="route.pcu_km" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="fg"><label class="lab">จาก PCU — เวลา (นาที)</label><input type="number" data-k="route.pcu_min" inputmode="numeric" min="0"></div>
+          <div class="fg"><label class="lab">จาก รพ. — ระยะทาง (กม.)</label><input type="number" data-k="route.hosp_km" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="fg"><label class="lab">จาก รพ. — เวลา (นาที)</label><input type="number" data-k="route.hosp_min" inputmode="numeric" min="0"></div>
+        </div>
+        <div class="fg"><label class="lab" for="f-road">สภาพถนน / การเดินทาง</label><input id="f-road" type="text" data-k="route.road" placeholder="เช่น ถนนลาดยางถึงหน้าบ้าน รถยนต์เข้าถึงได้"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section id="sec-p2" data-title="PART 2 | ข้อมูลผู้ป่วย">
+  <h2>PART 2 · ข้อมูลผู้ป่วย <span class="no">ประวัติ + การตรวจ</span></h2>
+  <div class="sbody">
+    <div class="subblock">
+      <h3>Present Illness และ Disease Timeline</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="4" data-k="patient.pi" data-label="Present illness / Timeline" placeholder="อาการปัจจุบัน + ลำดับเวลาโรค"></textarea></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Past History และ Social History</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">โรคประจำตัว / ผ่าตัด</label><textarea rows="2" data-k="past.illness"></textarea></div>
+        <div class="fg"><label class="lab">แพ้ยา / แพ้อาหาร</label><input type="text" data-k="past.allergy" placeholder="— ไม่มี / รายการที่แพ้ —"></div>
+        <div class="fg"><label class="lab">ประวัติมะเร็งในครอบครัว</label><input type="text" data-k="past.fam_ca" placeholder="— ไม่มี / ใคร + ชนิด —"></div>
+        <div class="fg"><label class="lab">อาชีพ / สถานะทางสังคม</label><input type="text" data-k="past.job" placeholder="เช่น เกษตรกร, ว่างงาน, อาศัยกับลูกสาว"></div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">บุหรี่ / ยาเส้น</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="past.smoke.no"><span>ไม่สูบ</span></label>
+              <label class="ck"><input type="checkbox" data-k="past.smoke.yes"><span>สูบ</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lab">pack-year</label><input type="number" data-k="past.smoke.ppy" inputmode="decimal" min="0" step="0.5" placeholder="ถ้าสูบ"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">แอลกอฮอล์ / สารเสพติด</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="past.alcohol.no"><span>ปฏิเสธ</span></label>
+              <label class="ck"><input type="checkbox" data-k="past.alcohol.yes"><span>มี</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lab">รายละเอียด</label><input type="text" data-k="past.alcohol.detail" placeholder="ชนิด/ปริมาณ"></div>
+        </div>
+        <div class="fg"><label class="lab">ยาสมุนไพร / ยาต้ม / OTC</label><input type="text" data-k="past.herb" placeholder="— ไม่มี / รายการ —"></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Investigation Summary</h3>
+      <div class="sbody">
+        <div class="fg">
+          <div class="lab">การตรวจ</div>
+          <div class="rep-body" data-rep="investigations"></div>
+          <button type="button" class="add" data-add="investigations">+ เพิ่มการตรวจ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 3 | INHOMESSS ============ -->
+<section id="sec-p3" data-title="PART 3 | INHOMESSS">
+  <h2>PART 3 · INHOMESSS — ประเมินบ้าน/ผู้ป่วย <span class="no">9 หมวด</span></h2>
+  <div class="sbody">
+
+    <div class="subblock">
+      <h3>I | Immobility / Impairment</h3>
+      <div class="sbody">
+        <div class="inrow">
+          <div class="fg"><label class="lab">Modified Barthel ADL — คะแนนรวม</label><input type="number" data-k="inhomes.imm.barthel" inputmode="numeric" min="0" max="20" placeholder="/20"></div>
+          <div class="fg"><label class="lab">ระดับ</label>
+            <select data-k="inhomes.imm.level"><option value="">— เลือก —</option><option>independent</option><option>mild</option><option>moderate</option><option>severe</option><option>total dependence</option></select>
+          </div>
+          <div class="fg"><label class="lab">Mobility</label>
+            <select data-k="inhomes.imm.mobility"><option value="">— เลือก —</option><option>independent</option><option>walking aid</option><option>wheelchair</option><option>mainly sit/lie</option><option>mainly in bed</option><option>totally bed bound</option></select>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lab">ADL / IADL (คะแนนรายด้าน)</label>
+          <div class="inline-nums">
+            <span class="ni"><span>Feeding</span><input type="number" data-k="inhomes.imm.adl.feeding" inputmode="numeric" min="0" max="5"></span>
+            <span class="ni"><span>Transfer</span><input type="number" data-k="inhomes.imm.adl.transfer" inputmode="numeric" min="0" max="5"></span>
+            <span class="ni"><span>Toilet</span><input type="number" data-k="inhomes.imm.adl.toilet" inputmode="numeric" min="0" max="5"></span>
+            <span class="ni"><span>Mobility</span><input type="number" data-k="inhomes.imm.adl.mobility" inputmode="numeric" min="0" max="5"></span>
+            <span class="ni"><span>Dressing</span><input type="number" data-k="inhomes.imm.adl.dressing" inputmode="numeric" min="0" max="5"></span>
+            <span class="ni"><span>Stairs</span><input type="number" data-k="inhomes.imm.adl.stairs" inputmode="numeric" min="0" max="5"></span>
+            <span class="ni"><span>Bathing</span><input type="number" data-k="inhomes.imm.adl.bathing" inputmode="numeric" min="0" max="5"></span>
+          </div>
+        </div>
+        <div class="cg">
+          <div class="lab">Bowel / Bladder</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.imm.bowel.normal"><span>ปกติ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.imm.bowel.constipation"><span>constipation</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.imm.bowel.incont"><span>incontinence</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.imm.bowel.catheter"><span>catheter</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.imm.bowel.stoma"><span>stoma</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">Balance / Gait / Falls — ล้มใน 1 ปี</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="inhomes.imm.falls.no"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.imm.falls.yes"><span>เคย</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lab">จำนวนครั้ง</label><input type="number" data-k="inhomes.imm.falls.count" inputmode="numeric" min="0"></div>
+          <div class="fg"><label class="lab">อุปกรณ์ช่วยเดิน</label><input type="text" data-k="inhomes.imm.falls.device" placeholder="เช่น ไม้เท้า 4 ขา, walker"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">Pressure injury / Skin</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="inhomes.imm.skin.no"><span>ไม่มี</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.imm.skin.yes"><span>มี</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lab">ตำแหน่ง</label><input type="text" data-k="inhomes.imm.skin.site" placeholder="เช่น sacrum"></div>
+          <div class="fg"><label class="lab">stage</label><input type="number" data-k="inhomes.imm.skin.stage" inputmode="numeric" min="1" max="4"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">PPS (%)</label><input type="number" data-k="inhomes.imm.pps" inputmode="numeric" min="0" max="100" step="10"></div>
+          <div class="fg"><label class="lab">ประเมินวันที่</label><input type="date" data-k="inhomes.imm.pps_date"></div>
+          <div class="fg"><label class="lab">ผู้ประเมิน</label><input type="text" data-k="inhomes.imm.pps_by"></div>
+        </div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.imm.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>N | Nutrition</h3>
+      <div class="sbody">
+        <div class="inrow">
+          <div class="fg"><label class="lab">BW (กก.)</label><input type="number" data-k="inhomes.nut.bw" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="fg"><label class="lab">Height (ซม.)</label><input type="number" data-k="inhomes.nut.height" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="fg"><label class="lab">BMI (กก./ม.²)</label><input type="number" data-k="inhomes.nut.bmi" inputmode="decimal" min="0" step="0.1"></div>
+        </div>
+        <div class="cg">
+          <div class="lab">Intake</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.intake.normal"><span>ปกติ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.intake.low"><span>ลดลง</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">จำนวนมื้อ / วัน</label><input type="number" data-k="inhomes.nut.meals" inputmode="numeric" min="0"></div>
+          <div class="fg"><label class="lab">ลักษณะอาหาร</label><input type="text" data-k="inhomes.nut.food" placeholder="เช่น ข้าวต้ม, อาหารปั่น, งดน้ำตาล"></div>
+        </div>
+        <div class="cg">
+          <div class="lab">Feeding</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.feed.oral"><span>oral</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.feed.ng"><span>NG feeding</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.feed.peg"><span>PEG</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.feed.other"><span>อื่น ๆ</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">น้ำ (มล./วัน)</label><input type="number" data-k="inhomes.nut.fluid" inputmode="numeric" min="0"></div>
+          <div class="fg"><label class="lab">Supplement (ปริมาณ)</label><input type="text" data-k="inhomes.nut.supp" placeholder="ชนิด/จำนวน"></div>
+        </div>
+        <div class="cg">
+          <div class="lab">Swallowing</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.swallow.ok"><span>ไม่มีปัญหา</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.swallow.choke"><span>สำลัก</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.nut.swallow.dys"><span>dysphagia</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">ปัญหา</label><input type="text" data-k="inhomes.nut.plan_prob" placeholder="ปัญหาทางโภชนาการ"></div>
+          <div class="fg"><label class="lab">เป้าหมาย</label><input type="text" data-k="inhomes.nut.plan_goal" placeholder="เป้าหมายทางโภชนาการ"></div>
+        </div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.nut.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>H | Housing / Home Environment</h3>
+      <div class="sbody">
+        <div class="inrow">
+          <div class="fg"><label class="lab">ประเภทบ้าน</label><input type="text" data-k="inhomes.house.type" placeholder="เช่น บ้านเดี่ยวไม้, ชั้นเดียว"></div>
+          <div class="fg"><label class="lab">ห้องนอน</label><input type="text" data-k="inhomes.house.bedroom" placeholder="ชั้น/ตำแหน่ง"></div>
+          <div class="fg"><label class="lab">เตียงอยู่</label><input type="text" data-k="inhomes.house.bed" placeholder="ห้องใด"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">ห้องน้ำห่าง (ม.)</label><input type="number" data-k="inhomes.house.toilet_dist" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="fg"><label class="lab">ครัวห่าง (ม.)</label><input type="number" data-k="inhomes.house.kitchen_dist" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="fg">
+            <label class="lab">มีบันได</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="inhomes.house.stairs.no"><span>ไม่มี</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.house.stairs.yes"><span>มี</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="cg">
+          <div class="lab">พื้น / แสง / อากาศ</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.env.safe"><span>ปลอดภัย</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.env.slip"><span>พื้นลื่น</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.env.dim"><span>แสงไม่พอ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.env.air"><span>อากาศถ่ายเทไม่ดี</span></label>
+        </div>
+        <div class="cg">
+          <div class="lab">Bathroom</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.bath.rail"><span>ราวจับ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.bath.norail"><span>ไม่มีราวจับ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.bath.wetdry"><span>wet/dry แยก</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.house.bath.threshold"><span>ธรณีประตูสูง</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">สาธารณูปโภค</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="inhomes.house.util.water"><span>น้ำ</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.house.util.elec"><span>ไฟ</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.house.util.san"><span>สุขาภิบาล</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.house.util.waste"><span>ขยะ</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lab">สัตว์เลี้ยง</label><input type="text" data-k="inhomes.house.pets" placeholder="— ไม่มี / ชนิด —"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Home modification — ข้อเสนอแนะ</label><input type="text" data-k="inhomes.house.mod" placeholder="เช่น ติดราวจับห้องน้ำ"></div>
+          <div class="fg"><label class="lab">ผู้รับผิดชอบ</label><input type="text" data-k="inhomes.house.mod_by" placeholder="ใครทำ/เมื่อไหร่"></div>
+        </div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.house.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>O | Other People</h3>
+      <div class="sbody">
+        <div class="inrow">
+          <div class="fg"><label class="lab">ผู้ดูแลหลัก</label><input type="text" data-k="inhomes.other.cg_main" placeholder="ชื่อ + เบอร์"></div>
+          <div class="fg"><label class="lab">ผู้ดูแลสำรอง</label><input type="text" data-k="inhomes.other.cg_backup"></div>
+          <div class="fg"><label class="lab">ตารางเวรดูแล</label><input type="text" data-k="inhomes.other.cg_schedule" placeholder="เช่น ลูกสาวเช้า–เย็น, หลานกลางคืน"></div>
+        </div>
+        <div class="fg"><label class="lab">Caregiver health — โรค/ข้อจำกัดของผู้ดูแล</label><input type="text" data-k="inhomes.other.cg_health" placeholder="เช่น ผู้ดูแลเองเป็น HT, ปวดหลัง"></div>
+        <div class="cg">
+          <div class="lab">Social support</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.support.family"><span>ครอบครัว</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.support.neighbor"><span>เพื่อนบ้าน</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.support.vhv"><span>อสม.</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.support.leader"><span>ผู้นำชุมชน</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.support.religion"><span>ศาสนา</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.support.other"><span>อื่น ๆ</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">ค่าใช้จ่ายหลัก</label><input type="text" data-k="inhomes.other.fin_main" placeholder="เช่น ยา, ค่าเดินทาง"></div>
+          <div class="fg"><label class="lab">แหล่งช่วยเหลือ</label><input type="text" data-k="inhomes.other.fin_aid" placeholder="เช่น ญาติ, อบต., กองทุน"></div>
+        </div>
+        <div class="cg">
+          <div class="lab">Legal / Decision maker</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.legal.livingwill"><span>Living will</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.legal.poa"><span>Power of Attorney</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.other.legal.proxy"><span>health-care proxy</span></label>
+        </div>
+        <div class="fg"><label class="lab">ผู้ตัดสินใจ (เมื่อผู้ป่วยตัดสินใจเองไม่ได้)</label><input type="text" data-k="inhomes.other.legal.decider" placeholder="ชื่อ + ความสัมพันธ์"></div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.other.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>M | Medication</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">Medication reconciliation — ทบทวนยาทั้งหมด (รวมยาจาก รพ. อื่น, OTC, สมุนไพร, อาหารเสริม)</label><textarea rows="3" data-k="inhomes.med.recon" placeholder="รายการยาทั้งหมดที่ได้จริง + สิ่งที่พบ"></textarea></div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">เก็บยา</label><input type="text" data-k="inhomes.med.storage" placeholder="สถานที่/อุณหภูมิ"></div>
+          <div class="fg"><label class="lab">ผู้จัดยา</label><input type="text" data-k="inhomes.med.giver" placeholder="ใครเป็นคนจัดให้ทาน"></div>
+          <div class="fg"><label class="lab">ปัญหาการใช้ยา</label><input type="text" data-k="inhomes.med.problem" placeholder="เช่น ลืมทาน, ทานซ้ำ"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">แพ้ยา</label><input type="text" data-k="inhomes.med.allergy" placeholder="— ไม่มี / รายการ —"></div>
+          <div class="fg"><label class="lab">renal/hepatic concern</label><input type="text" data-k="inhomes.med.organ"></div>
+          <div class="fg"><label class="lab">adverse effect</label><input type="text" data-k="inhomes.med.ae"></div>
+        </div>
+        <div class="fg">
+          <div class="lab">Medication Record — ตารางยา (ยา/ความแรง · ขนาด · ความถี่ · ข้อบ่งชี้ · วันที่เปลี่ยน · Adherence/AE)</div>
+          <div class="rep-body" data-rep="medications"></div>
+          <button type="button" class="add" data-add="medications">+ เพิ่มแถวยา</button>
+        </div>
+        <div class="fg"><label class="lab">Chronological change (การเปลี่ยนยาตามเวลา)</label><textarea rows="2" data-k="inhomes.med.changes"></textarea></div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.med.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>E | Examination</h3>
+      <div class="sbody">
+        <div class="fg">
+          <label class="lab">Vital signs</label>
+          <div class="inline-nums">
+            <span class="ni"><span>BT °C</span><input type="number" data-k="inhomes.exam.bt" inputmode="decimal" step="0.1" min="30" max="45"></span>
+            <span class="ni"><span>BP</span><input type="text" data-k="inhomes.exam.bp" placeholder="120/80" style="width:80px"></span>
+            <span class="ni"><span>HR</span><input type="number" data-k="inhomes.exam.hr" inputmode="numeric" min="0"></span>
+            <span class="ni"><span>RR</span><input type="number" data-k="inhomes.exam.rr" inputmode="numeric" min="0"></span>
+            <span class="ni"><span>SpO₂ %</span><input type="number" data-k="inhomes.exam.spo2" inputmode="numeric" min="0" max="100"></span>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lab">Anthropometry</label>
+          <div class="inline-nums">
+            <span class="ni"><span>BW กก.</span><input type="number" data-k="inhomes.exam.bw" inputmode="decimal" step="0.1"></span>
+            <span class="ni"><span>Height ซม.</span><input type="number" data-k="inhomes.exam.height" inputmode="decimal" step="0.1"></span>
+            <span class="ni"><span>BMI</span><input type="number" data-k="inhomes.exam.bmi" inputmode="decimal" step="0.1"></span>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lab">Symptoms (0–10)</label>
+          <div class="rng"><span style="min-width:110px">Pain</span><input type="range" min="0" max="10" value="0" data-k="inhomes.exam.pain"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Dyspnea</span><input type="range" min="0" max="10" value="0" data-k="inhomes.exam.dyspnea"><output>0</output></div>
+        </div>
+        <div class="fg"><label class="lab">อื่น ๆ (symptom)</label><input type="text" data-k="inhomes.exam.symptoms_other"></div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">GA</label><input type="text" data-k="inhomes.exam.ga" placeholder="general appearance"></div>
+          <div class="fg"><label class="lab">HEENT</label><input type="text" data-k="inhomes.exam.HEENT"></div>
+          <div class="fg"><label class="lab">CVS</label><input type="text" data-k="inhomes.exam.cvs"></div>
+          <div class="fg"><label class="lab">RS</label><input type="text" data-k="inhomes.exam.rs"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Neuro</label><input type="text" data-k="inhomes.exam.neuro"></div>
+          <div class="fg"><label class="lab">Cognition</label>
+            <select data-k="inhomes.exam.cognition"><option value="">— เลือก —</option><option>no cognitive impairment</option><option>mild</option><option>severe</option></select>
+          </div>
+        </div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">Mood / distress</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="inhomes.exam.mood.no"><span>ไม่มี</span></label>
+              <label class="ck"><input type="checkbox" data-k="inhomes.exam.mood.yes"><span>มี</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lab">รายละเอียด / แผน</label><input type="text" data-k="inhomes.exam.mood_plan"></div>
+        </div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.exam.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>S | Safety</h3>
+      <div class="sbody">
+        <div class="cg">
+          <div class="lab">Bathroom</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bath.noslip"><span>ไม่ลื่น</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bath.rail"><span>ราวจับ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bath.light"><span>แสงเพียงพอ</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bath.wetdry"><span>แยกเปียก/แห้ง</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bath.toilet"><span>toilet เหมาะสม</span></label>
+        </div>
+        <div class="cg">
+          <div class="lab">Bedroom / falls</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bed.safe"><span>เตียงปลอดภัย</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bed.clear"><span>ทางเดินโล่ง</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.bed.nocord"><span>ไม่มีสายไฟ/พรมเสี่ยง</span></label>
+        </div>
+        <div class="cg">
+          <div class="lab">Kitchen / fire / electric</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.kitchen.ok"><span>ปลอดภัย</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.kitchen.fix"><span>ต้องแก้ไข</span></label>
+        </div>
+        <div class="fg"><label class="lab">รายละเอียด kitchen/ไฟ</label><input type="text" data-k="inhomes.safe.kitchen.detail"></div>
+        <div class="cg">
+          <div class="lab">Equipment (O₂ / suction / bed / wheelchair…)</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.equip.ok"><span>ใช้ถูกต้อง</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.safe.equip.teach"><span>ต้องสอนเพิ่มเติม</span></label>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Action — การปรับบ้าน</label><input type="text" data-k="inhomes.safe.action" placeholder="ปรับอะไรบ้าง"></div>
+          <div class="fg"><label class="lab">กำหนดเสร็จ</label><input type="date" data-k="inhomes.safe.action_due"></div>
+        </div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.safe.plan"></textarea></div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>S | Spiritual Health</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">Love — บุคคลสำคัญ / ความสัมพันธ์</label><input type="text" data-k="inhomes.spirit.love"></div>
+        <div class="fg"><label class="lab">Faith / belief — ความเชื่อ</label><input type="text" data-k="inhomes.spirit.faith"></div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Religion / practice — ศาสนา</label><input type="text" data-k="inhomes.spirit.religion"></div>
+          <div class="fg"><label class="lab">กิจกรรมที่ต้องการ</label><input type="text" data-k="inhomes.spirit.activity" placeholder="เช่น ฟังธรรม, ทำบุญ"></div>
+        </div>
+        <div class="fg"><label class="lab">Hope — ความหวัง / สิ่งที่อยากให้เกิด</label><input type="text" data-k="inhomes.spirit.hope"></div>
+        <div class="fg"><label class="lab">Meaning / distress — ความหมายชีวิต, เรื่องค้างคา</label><input type="text" data-k="inhomes.spirit.meaning"></div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">ผู้สนับสนุนทางจิตวิญญาณ</label><input type="text" data-k="inhomes.spirit.support"></div>
+          <div class="fg"><label class="lab">แผน</label><input type="text" data-k="inhomes.spirit.plan"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>S | Services</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">Entitlement — สิทธิการรักษา</label><input type="text" data-k="inhomes.svc.entitle" placeholder="UC/ขรก./บัตรทอง ฯลฯ"></div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">PCU / รพ.สต.</label><input type="text" data-k="inhomes.svc.pcu"></div>
+          <div class="fg"><label class="lab">ผู้ประสานงาน</label><input type="text" data-k="inhomes.svc.pcu_contact"></div>
+          <div class="fg"><label class="lab">โทร.</label><input type="tel" data-k="inhomes.svc.pcu_tel" inputmode="tel"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">โรงพยาบาล</label><input type="text" data-k="inhomes.svc.hosp"></div>
+          <div class="fg"><label class="lab">คลินิก</label><input type="text" data-k="inhomes.svc.clinic"></div>
+          <div class="fg"><label class="lab">โทร.</label><input type="tel" data-k="inhomes.svc.hosp_tel" inputmode="tel"></div>
+        </div>
+        <div class="cg">
+          <div class="lab">Other services</div>
+          <label class="ck"><input type="checkbox" data-k="inhomes.svc.other.palliative"><span>palliative</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.svc.other.rehab"><span>rehab</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.svc.other.welfare"><span>social welfare</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.svc.other.trad"><span>traditional medicine</span></label>
+          <label class="ck"><input type="checkbox" data-k="inhomes.svc.other.homehealth"><span>home health</span></label>
+        </div>
+        <div class="fg"><label class="lab">Coordination — การส่งต่อ / นัดหมาย / เบอร์ฉุกเฉิน</label><textarea rows="2" data-k="inhomes.svc.coord"></textarea></div>
+        <div class="fg"><label class="lab">ปัญหา / Priority / แผน / ผู้รับผิดชอบ / วันติดตาม</label><textarea rows="2" data-k="inhomes.svc.plan"></textarea></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section id="sec-p4" data-title="PART 4 | การประเมินครอบครัว">
+  <h2>PART 4 · การประเมินครอบครัว <span class="no">Agenda + Structure</span></h2>
+  <div class="sbody">
+    <div class="subblock">
+      <h3>Patient Agenda — IFE Framework</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="4" data-k="fam.agenda.patient" data-label="Patient Agenda — IFE" placeholder="Ideas (ผู้ป่วยคิดว่าอะไรเป็นปัญหา) / Fears (กลัวอะไร) / Expectations (หวังผลอะไร)"></textarea></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Caregiver Agenda — IFE Framework</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="4" data-k="fam.agenda.caregiver" data-label="Caregiver Agenda — IFE" placeholder="มุมมองของผู้ดูแล: ความคิด / ความกลัว / ความคาดหวัง"></textarea></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Family Structure</h3>
+      <div class="sbody">
+        <div class="inrow">
+          <div class="fg"><label class="lab">Family type</label>
+            <select data-k="fam.struct.type"><option value="">— เลือก —</option><option>nuclear</option><option>extended</option><option>other</option></select>
+          </div>
+          <div class="fg"><label class="lab">Family life cycle</label><input type="text" data-k="fam.struct.cycle" placeholder="เช่น aging family, empty nest"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Hierarchy</label><input type="text" data-k="fam.struct.hierarchy"></div>
+          <div class="fg"><label class="lab">Boundary</label><input type="text" data-k="fam.struct.boundary"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Sick role</label><input type="text" data-k="fam.struct.role_sick"></div>
+          <div class="fg"><label class="lab">Caregiver role</label><input type="text" data-k="fam.struct.role_cg"></div>
+          <div class="fg"><label class="lab">Financial role</label><input type="text" data-k="fam.struct.role_fin"></div>
+          <div class="fg"><label class="lab">Decision-maker</label><input type="text" data-k="fam.struct.role_dec"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Alliance</label><input type="text" data-k="fam.struct.alliance"></div>
+          <div class="fg"><label class="lab">Coalition</label><input type="text" data-k="fam.struct.coalition"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg">
+            <label class="lab">Scapegoat</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="fam.struct.scapegoat.no"><span>no</span></label>
+              <label class="ck"><input type="checkbox" data-k="fam.struct.scapegoat.yes"><span>yes</span></label>
+            </div>
+          </div>
+          <div class="fg">
+            <label class="lab">Parentified child</label>
+            <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+              <label class="ck"><input type="checkbox" data-k="fam.struct.parentified.no"><span>no</span></label>
+              <label class="ck"><input type="checkbox" data-k="fam.struct.parentified.yes"><span>yes</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="fg"><label class="lab">Other concern</label><input type="text" data-k="fam.struct.other"></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Family Process และ Family Stress</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="4" data-k="fam.process" data-label="Family Process / Stress" placeholder="กระบวนการตัดสินใจในครอบครัว, ความเครียดในครอบครัว, เหตุการณ์สำคัญ"></textarea></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section id="sec-p5" data-title="PART 5 | Palliative / ACP">
+  <h2>PART 5 · Palliative Care และ ACP <span class="no">ใช้เมื่อมีข้อบ่งชี้</span></h2>
+  <div class="sbody">
+    <div class="subblock">
+      <h3>Palliative Clinical Summary</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">Serious illness / stage</label><input type="text" data-k="pall.summary.illness" placeholder="เช่น adv CA lung stage IV"></div>
+        <div class="fg">
+          <label class="lab">Disease trajectory</label>
+          <div class="cg" style="border:0; padding:0; background:none; gap:8px;">
+            <label class="ck"><input type="checkbox" data-k="pall.summary.traj.stable"><span>stable</span></label>
+            <label class="ck"><input type="checkbox" data-k="pall.summary.traj.progressive"><span>progressive</span></label>
+            <label class="ck"><input type="checkbox" data-k="pall.summary.traj.dying"><span>actively dying</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lab">Function trajectory</label>
+          <div class="inline-nums">
+            <span class="ni"><span>PPS %</span><input type="number" data-k="pall.summary.pps" inputmode="numeric" min="0" max="100" step="10"></span>
+            <span class="ni"><span>ADL</span><input type="number" data-k="pall.summary.adl" inputmode="numeric" min="0" max="20"></span>
+            <span class="ni"><span>Mobility</span><input type="text" style="width:90px" data-k="pall.summary.mobility"></span>
+            <span class="ni"><span>Nutrition</span><input type="text" style="width:90px" data-k="pall.summary.nutrition"></span>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lab">Symptoms (0–10)</label>
+          <div class="rng"><span style="min-width:110px">Pain</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.pain"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Dyspnea</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.dyspnea"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Fatigue</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.fatigue"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">N/V</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.nv"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Constipation</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.constipation"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Delirium</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.delirium"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Secretion</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.secretion"><output>0</output></div>
+          <div class="rng"><span style="min-width:110px">Anxiety</span><input type="range" min="0" max="10" value="0" data-k="pall.summary.sx.anxiety"><output>0</output></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Breakthrough — อาการ</label><input type="text" data-k="pall.summary.bt.onset"></div>
+          <div class="fg"><label class="lab">ความถี่</label><input type="text" data-k="pall.summary.bt.freq"></div>
+          <div class="fg"><label class="lab">trigger</label><input type="text" data-k="pall.summary.bt.trigger"></div>
+          <div class="fg"><label class="lab">response</label><input type="text" data-k="pall.summary.bt.response"></div>
+        </div>
+        <div class="fg"><label class="lab">Red flags / emergency plan</label><textarea rows="3" data-k="pall.summary.redflags"></textarea></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>ACP / Goals of Care</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">Understanding — ความเข้าใจของผู้ป่วย/ครอบครัวต่อโรค</label><input type="text" data-k="pall.acp.understanding"></div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Surrogate — ชื่อ</label><input type="text" data-k="pall.acp.surrogate_name"></div>
+          <div class="fg"><label class="lab">ความสัมพันธ์</label><input type="text" data-k="pall.acp.surrogate_rel"></div>
+          <div class="fg"><label class="lab">โทร.</label><input type="tel" data-k="pall.acp.surrogate_tel" inputmode="tel"></div>
+        </div>
+        <div class="cg">
+          <div class="lab">Goals</div>
+          <label class="ck"><input type="checkbox" data-k="pall.acp.goals.disease"><span>disease-directed</span></label>
+          <label class="ck"><input type="checkbox" data-k="pall.acp.goals.supportive"><span>supportive</span></label>
+          <label class="ck"><input type="checkbox" data-k="pall.acp.goals.comfort"><span>comfort-focused</span></label>
+        </div>
+        <div class="fg">
+          <label class="lab">Treatment preference</label>
+          <div class="inline-nums">
+            <span class="ni"><span>CPR/DNR</span><input type="text" style="width:70px" data-k="pall.acp.pref.cpr"></span>
+            <span class="ni"><span>ETT</span><input type="text" style="width:70px" data-k="pall.acp.pref.ett"></span>
+            <span class="ni"><span>ICU</span><input type="text" style="width:70px" data-k="pall.acp.pref.icu"></span>
+            <span class="ni"><span>invasive proc.</span><input type="text" style="width:70px" data-k="pall.acp.pref.invasive"></span>
+            <span class="ni"><span>artificial feeding</span><input type="text" style="width:80px" data-k="pall.acp.pref.feeding"></span>
+            <span class="ni"><span>hospitalization</span><input type="text" style="width:80px" data-k="pall.acp.pref.hosp"></span>
+          </div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Preferred place — care</label><input type="text" data-k="pall.acp.place_care"></div>
+          <div class="fg"><label class="lab">death</label><input type="text" data-k="pall.acp.place_death"></div>
+        </div>
+        <div class="inrow">
+          <div class="fg"><label class="lab">Discussion — วันที่</label><input type="date" data-k="pall.acp.disc_date"></div>
+          <div class="fg"><label class="lab">ผู้เข้าร่วม</label><input type="text" data-k="pall.acp.disc_who"></div>
+          <div class="fg"><label class="lab">ทบทวนวันที่</label><input type="date" data-k="pall.acp.disc_review"></div>
+        </div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Palliative Medication Safety</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="3" data-k="pall.med" data-label="Palliative Medication Safety" placeholder="ยาประคับประคอง, ความปลอดภัย, PRN, การจัดยา"></textarea></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 6 ============ -->
+<section id="sec-p6" data-title="PART 6 | Problem List">
+  <h2>PART 6 · Problem List และ Management <span class="no">Biopsychosocial-spiritual</span></h2>
+  <div class="sbody">
+    <div class="subblock">
+      <h3>Biopsychosocial-Spiritual Problem List</h3>
+      <div class="sbody">
+        <div class="fg">
+          <div class="lab">ปัญหา — เพิ่มตาม Domain</div>
+          <div class="rep-body" data-rep="problems"></div>
+          <button type="button" class="add" data-add="problems">+ เพิ่มปัญหา</button>
+        </div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Problem Management Record</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="5" data-k="prob.mgmt" data-label="Problem Management Record" placeholder="บันทึกการจัดการปัญหาแต่ละข้อ ความคืบหน้า ผลลัพธ์"></textarea></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 7 ============ -->
+<section id="sec-p7" data-title="PART 7 | ผู้ดูแล">
+  <h2>PART 7 · Caregiver Burden และ Communication <span class="no">ภาระผู้ดูแล</span></h2>
+  <div class="sbody">
+    <div class="subblock">
+      <h3>Caregiver Burden Assessment</h3>
+      <div class="sbody">
+        <div class="fg"><label class="lab">Risk factors</label><textarea rows="2" data-k="cgb.risk" placeholder="สุขภาพผู้ดูแล / การเงิน / ชั่วโมงดูแล / dependency / behavioural-cognitive symptoms / ขาด support"></textarea></div>
+        <div class="fg"><label class="lab">Caregiver needs</label><input type="text" data-k="cgb.needs" placeholder="ความรู้โรค / การให้ยา / symptom care / emotional / social support / respite"></div>
+        <div class="qz" id="zarit-box" data-qz="zarit">
+          <div class="qz-head"> Thai Zarit Burden Interview — 22 ข้อ (คะแนน 0–88)</div>
+          <div class="qz-body">
+            <div class="q-note">ให้ผู้ดูแลตอบตามความรู้สึกจริง: ไม่เคย (0) · นาน ๆ ครั้ง (1) · บางครั้ง (2) · ค่อนข้างบ่อย (3) · เกือบทุกวัน (4)</div>
+            <div class="q-item"><div class="q-text">1. รู้สึกว่าผู้ที่ท่านดูแลถามบ่อยเกินความจำเป็น</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq1" value="0" data-k="cgb.zarit.q1"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq1" value="1" data-k="cgb.zarit.q1"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq1" value="2" data-k="cgb.zarit.q1"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq1" value="3" data-k="cgb.zarit.q1"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq1" value="4" data-k="cgb.zarit.q1"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">2. รู้สึกว่าไม่มีเวลาส่วนตัวเพียงพอ เพราะต้องใช้เวลาในการดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq2" value="0" data-k="cgb.zarit.q2"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq2" value="1" data-k="cgb.zarit.q2"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq2" value="2" data-k="cgb.zarit.q2"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq2" value="3" data-k="cgb.zarit.q2"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq2" value="4" data-k="cgb.zarit.q2"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">3. รู้สึกเครียด ระหว่างภาระหน้าที่ในการดูแลกับภาระอื่น ๆ ในครอบครัว/การงาน</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq3" value="0" data-k="cgb.zarit.q3"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq3" value="1" data-k="cgb.zarit.q3"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq3" value="2" data-k="cgb.zarit.q3"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq3" value="3" data-k="cgb.zarit.q3"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq3" value="4" data-k="cgb.zarit.q3"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">4. รู้สึกอับอาย เนื่องจากพฤติกรรมของผู้ที่ท่านดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq4" value="0" data-k="cgb.zarit.q4"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq4" value="1" data-k="cgb.zarit.q4"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq4" value="2" data-k="cgb.zarit.q4"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq4" value="3" data-k="cgb.zarit.q4"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq4" value="4" data-k="cgb.zarit.q4"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">5. รู้สึกโกรธ เมื่ออยู่ใกล้ผู้ที่ท่านดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq5" value="0" data-k="cgb.zarit.q5"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq5" value="1" data-k="cgb.zarit.q5"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq5" value="2" data-k="cgb.zarit.q5"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq5" value="3" data-k="cgb.zarit.q5"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq5" value="4" data-k="cgb.zarit.q5"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">6. รู้สึกว่าการดูแลส่งผลกระทบด้านลบต่อความสัมพันธ์กับคนในครอบครัว/เพื่อน</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq6" value="0" data-k="cgb.zarit.q6"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq6" value="1" data-k="cgb.zarit.q6"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq6" value="2" data-k="cgb.zarit.q6"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq6" value="3" data-k="cgb.zarit.q6"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq6" value="4" data-k="cgb.zarit.q6"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">7. รู้สึกกลัวเกี่ยวกับอนาคตของผู้ที่ท่านดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq7" value="0" data-k="cgb.zarit.q7"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq7" value="1" data-k="cgb.zarit.q7"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq7" value="2" data-k="cgb.zarit.q7"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq7" value="3" data-k="cgb.zarit.q7"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq7" value="4" data-k="cgb.zarit.q7"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">8. รู้สึกว่าผู้ที่ท่านดูแลพึ่งพาท่านมากเกินไป</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq8" value="0" data-k="cgb.zarit.q8"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq8" value="1" data-k="cgb.zarit.q8"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq8" value="2" data-k="cgb.zarit.q8"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq8" value="3" data-k="cgb.zarit.q8"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq8" value="4" data-k="cgb.zarit.q8"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">9. รู้สึกเครียด เมื่ออยู่ใกล้ผู้ที่ท่านดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq9" value="0" data-k="cgb.zarit.q9"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq9" value="1" data-k="cgb.zarit.q9"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq9" value="2" data-k="cgb.zarit.q9"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq9" value="3" data-k="cgb.zarit.q9"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq9" value="4" data-k="cgb.zarit.q9"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">10. รู้สึกว่าสุขภาพของท่านแย่ลง จากการดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq10" value="0" data-k="cgb.zarit.q10"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq10" value="1" data-k="cgb.zarit.q10"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq10" value="2" data-k="cgb.zarit.q10"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq10" value="3" data-k="cgb.zarit.q10"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq10" value="4" data-k="cgb.zarit.q10"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">11. รู้สึกว่าไม่มีเวลาส่วนตัว ได้เป็นส่วนตัวน้อยลง</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq11" value="0" data-k="cgb.zarit.q11"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq11" value="1" data-k="cgb.zarit.q11"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq11" value="2" data-k="cgb.zarit.q11"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq11" value="3" data-k="cgb.zarit.q11"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq11" value="4" data-k="cgb.zarit.q11"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">12. รู้สึกว่าชีวิตสังคมของท่านแย่ลง เพราะการดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq12" value="0" data-k="cgb.zarit.q12"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq12" value="1" data-k="cgb.zarit.q12"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq12" value="2" data-k="cgb.zarit.q12"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq12" value="3" data-k="cgb.zarit.q12"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq12" value="4" data-k="cgb.zarit.q12"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">13. รู้สึกอึดอัดใจ เมื่อมีแขก/เพื่อนมาบ้าน เพราะผู้ที่ท่านดูแล</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq13" value="0" data-k="cgb.zarit.q13"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq13" value="1" data-k="cgb.zarit.q13"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq13" value="2" data-k="cgb.zarit.q13"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq13" value="3" data-k="cgb.zarit.q13"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq13" value="4" data-k="cgb.zarit.q13"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">14. รู้สึกว่าผู้ที่ท่านดูแลคาดหวังให้ท่านดูแล ราวกับเป็นเพียงคนเดียวที่พึ่งได้</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq14" value="0" data-k="cgb.zarit.q14"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq14" value="1" data-k="cgb.zarit.q14"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq14" value="2" data-k="cgb.zarit.q14"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq14" value="3" data-k="cgb.zarit.q14"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq14" value="4" data-k="cgb.zarit.q14"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">15. รู้สึกว่าเงินไม่พอใช้ ในการดูแลผู้ป่วยนอกเหนือค่าใช้จ่ายอื่น</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq15" value="0" data-k="cgb.zarit.q15"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq15" value="1" data-k="cgb.zarit.q15"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq15" value="2" data-k="cgb.zarit.q15"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq15" value="3" data-k="cgb.zarit.q15"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq15" value="4" data-k="cgb.zarit.q15"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">16. รู้สึกว่าไม่สามารถดูแลผู้ป่วยได้นานอีกต่อไป</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq16" value="0" data-k="cgb.zarit.q16"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq16" value="1" data-k="cgb.zarit.q16"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq16" value="2" data-k="cgb.zarit.q16"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq16" value="3" data-k="cgb.zarit.q16"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq16" value="4" data-k="cgb.zarit.q16"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">17. รู้สึกว่าสูญเสียการควบคุมชีวิตตนเอง ตั้งแต่ต้องดูแลผู้ป่วย</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq17" value="0" data-k="cgb.zarit.q17"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq17" value="1" data-k="cgb.zarit.q17"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq17" value="2" data-k="cgb.zarit.q17"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq17" value="3" data-k="cgb.zarit.q17"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq17" value="4" data-k="cgb.zarit.q17"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">18. อยากให้ผู้อื่นดูแลผู้ป่วยแทน</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq18" value="0" data-k="cgb.zarit.q18"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq18" value="1" data-k="cgb.zarit.q18"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq18" value="2" data-k="cgb.zarit.q18"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq18" value="3" data-k="cgb.zarit.q18"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq18" value="4" data-k="cgb.zarit.q18"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">19. รู้สึกไม่แน่ใจว่าจะต้องทำอะไรกับผู้ป่วยดี</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq19" value="0" data-k="cgb.zarit.q19"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq19" value="1" data-k="cgb.zarit.q19"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq19" value="2" data-k="cgb.zarit.q19"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq19" value="3" data-k="cgb.zarit.q19"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq19" value="4" data-k="cgb.zarit.q19"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">20. รู้สึกว่าควรทำเพื่อผู้ป่วยมากกว่านี้</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq20" value="0" data-k="cgb.zarit.q20"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq20" value="1" data-k="cgb.zarit.q20"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq20" value="2" data-k="cgb.zarit.q20"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq20" value="3" data-k="cgb.zarit.q20"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq20" value="4" data-k="cgb.zarit.q20"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">21. รู้สึกว่าควรดูแลผู้ป่วยให้ดีกว่านี้</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq21" value="0" data-k="cgb.zarit.q21"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq21" value="1" data-k="cgb.zarit.q21"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq21" value="2" data-k="cgb.zarit.q21"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq21" value="3" data-k="cgb.zarit.q21"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq21" value="4" data-k="cgb.zarit.q21"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">22. โดยรวมแล้ว ท่านรู้สึกเป็นภาระมากแค่ไหน ในการดูแลผู้ป่วย</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="zq22" value="0" data-k="cgb.zarit.q22"><span>ไม่เคย</span></label>
+              <label class="ck"><input type="radio" name="zq22" value="1" data-k="cgb.zarit.q22"><span>นาน ๆ ครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq22" value="2" data-k="cgb.zarit.q22"><span>บางครั้ง</span></label>
+              <label class="ck"><input type="radio" name="zq22" value="3" data-k="cgb.zarit.q22"><span>ค่อนข้างบ่อย</span></label>
+              <label class="ck"><input type="radio" name="zq22" value="4" data-k="cgb.zarit.q22"><span>เกือบทุกวัน</span></label>
+            </div></div>
+            <div class="qz-out">
+              <div class="fg"><label class="lab">Zarit — วันที่ประเมิน</label><input type="date" data-k="cgb.zarit.date"></div>
+              <div class="fg"><label class="lab">Zarit คะแนนรวม (0–88) · คิดอัตโนมัติ</label><input readonly type="text" data-k="cgb.zarit.score" data-label="Zarit คะแนนรวม"></div>
+              <div class="fg"><label class="lab">Zarit การแปลผล · คิดอัตโนมัติ</label><input readonly type="text" data-k="cgb.zarit.interpret" data-label="Zarit การแปลผล"></div>
+              <div class="fg"><label class="lab">Zarit คำตอบรายข้อ (22) · สรุปอัตโนมัติ</label><textarea readonly rows="2" data-k="cgb.zarit.answers" data-label="Zarit คำตอบรายข้อ"></textarea></div>
+              <div class="fg"><label class="lab">แผน / หมายเหตุ</label><input type="text" data-k="cgb.zarit.plan" placeholder="แผนติดตาม ดูแลผู้ดูแล"></div>
+            </div>
+            <div class="q-note">การแปลผลมาตรฐาน: 0–20 ไม่มีภาระ/ภาระน้อย · 21–40 ภาระปานกลาง · 41–60 ภาระมาก · 61–88 ภาระมากที่สุด &nbsp;|&nbsp; บางการศึกษาในไทยใช้จุดตัด ≥24 บ่งชี้ "มีภาระการดูแล" — ควรเทียบเกณฑ์ของหน่วยงาน</div>
+          </div>
+        </div>
+        <div class="qz" id="dep-box" data-qz="dep">
+          <div class="qz-head"> คัดกรองภาวะซึมเศร้า 2Q / 9Q (กรมสุขภาพจิต)</div>
+          <div class="qz-body">
+            <div class="q-note">ใช้คัดกรองผู้ดูแล (หรือผู้ป่วยตามบริบท): ตอบ 2Q ก่อน — ถ้าตอบ "ใช่" ข้อใดข้อหนึ่ง ให้ทำ 9Q ด้านล่าง (ถ้าตอบ "ไม่" ทั้ง 2 ข้อ ข้าม 9Q ได้) — แสดงไว้ครบ ไม่มีการซ่อน/ขยับ</div>
+            <div class="q-item"><div class="q-text">2Q-1: ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกหดหู่ เศร้า หรือท้อแท้สิ้นหวัง หรือไม่</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="dq1" value="0" data-k="cgb.dep.q1"><span>ไม่</span></label>
+              <label class="ck"><input type="radio" name="dq1" value="1" data-k="cgb.dep.q1"><span>ใช่</span></label>
+            </div></div>
+            <div class="q-item"><div class="q-text">2Q-2: ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกเบื่อ ทำอะไรก็ไม่เพลิดเพลิน หรือไม่</div><div class="q-opt">
+              <label class="ck"><input type="radio" name="dq2" value="0" data-k="cgb.dep.q2"><span>ไม่</span></label>
+              <label class="ck"><input type="radio" name="dq2" value="1" data-k="cgb.dep.q2"><span>ใช่</span></label>
+            </div></div>
+            <div id="ninth-block">
+              <div class="q-item"><div class="q-text">9Q-1: เบื่อ ไม่สนใจอยากทำอะไร</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_1" value="0" data-k="cgb.dep.q9_1"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_1" value="1" data-k="cgb.dep.q9_1"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_1" value="2" data-k="cgb.dep.q9_1"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_1" value="3" data-k="cgb.dep.q9_1"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-2: ไม่สบายใจ ซึมเศร้า ท้อแท้</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_2" value="0" data-k="cgb.dep.q9_2"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_2" value="1" data-k="cgb.dep.q9_2"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_2" value="2" data-k="cgb.dep.q9_2"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_2" value="3" data-k="cgb.dep.q9_2"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-3: หลับยาก หรือหลับ ๆ ตื่น ๆ หรือหลับมากเกินไป</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_3" value="0" data-k="cgb.dep.q9_3"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_3" value="1" data-k="cgb.dep.q9_3"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_3" value="2" data-k="cgb.dep.q9_3"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_3" value="3" data-k="cgb.dep.q9_3"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-4: เหนื่อยง่าย หรือไม่ค่อยมีแรง</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_4" value="0" data-k="cgb.dep.q9_4"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_4" value="1" data-k="cgb.dep.q9_4"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_4" value="2" data-k="cgb.dep.q9_4"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_4" value="3" data-k="cgb.dep.q9_4"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-5: เบื่ออาหาร หรือกินมากเกินไป</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_5" value="0" data-k="cgb.dep.q9_5"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_5" value="1" data-k="cgb.dep.q9_5"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_5" value="2" data-k="cgb.dep.q9_5"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_5" value="3" data-k="cgb.dep.q9_5"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-6: รู้สึกไม่ดีกับตัวเอง คิดว่าตัวเองล้มเหลว หรือทำให้ครอบครัวผิดหวัง</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_6" value="0" data-k="cgb.dep.q9_6"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_6" value="1" data-k="cgb.dep.q9_6"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_6" value="2" data-k="cgb.dep.q9_6"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_6" value="3" data-k="cgb.dep.q9_6"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-7: สมาธิไม่ดี เช่น ดูทีวีไม่รู้เรื่อง หรือจำไม่ได้ว่าอ่านอะไรไปแล้ว</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_7" value="0" data-k="cgb.dep.q9_7"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_7" value="1" data-k="cgb.dep.q9_7"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_7" value="2" data-k="cgb.dep.q9_7"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_7" value="3" data-k="cgb.dep.q9_7"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-8: พูดช้า ทำอะไรช้าลง หรือกระสับกระส่าย อยู่นิ่งไม่เป็น</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_8" value="0" data-k="cgb.dep.q9_8"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_8" value="1" data-k="cgb.dep.q9_8"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_8" value="2" data-k="cgb.dep.q9_8"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_8" value="3" data-k="cgb.dep.q9_8"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="q-item"><div class="q-text">9Q-9: คิดทำร้ายตนเอง หรือคิดว่าอยู่ไปก็ไม่มีประโยชน์ หรืออยากตาย</div><div class="q-opt">
+                <label class="ck"><input type="radio" name="d9_9" value="0" data-k="cgb.dep.q9_9"><span>ไม่มีเลย</span></label>
+                <label class="ck"><input type="radio" name="d9_9" value="1" data-k="cgb.dep.q9_9"><span>มีบางวัน (1–7 วัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_9" value="2" data-k="cgb.dep.q9_9"><span>มีบ่อย (ครึ่งวัน)</span></label>
+                <label class="ck"><input type="radio" name="d9_9" value="3" data-k="cgb.dep.q9_9"><span>เกือบทุกวัน</span></label>
+              </div></div>
+              <div class="qz-out">
+                <div class="fg"><label class="lab">9Q คะแนนรวม (0–27) · คิดอัตโนมัติ</label><input readonly type="text" data-k="cgb.dep.score" data-label="9Q คะแนนรวม"></div>
+                <div class="fg"><label class="lab">9Q การแปลผล · คิดอัตโนมัติ</label><input readonly type="text" data-k="cgb.dep.interpret" data-label="9Q การแปลผล"></div>
+              </div>
+              <div class="q-note">9Q: 0–6 ปกติ · 7–12 ซึมเศร้าน้อย · 13–18 ปานกลาง · ≥19 รุนแรง &nbsp;|&nbsp; <b>ข้อ 9 ตอบ ≥1 → ประเมินความเสี่ยงฆ่าตัวตายทันทีและส่งต่อ</b></div>
+            </div>
+            <div class="fg"><label class="lab">สรุปการคัดกรอง 2Q/9Q · คิดอัตโนมัติ</label><textarea readonly rows="2" data-k="cgb.dep.summary" data-label="สรุปการคัดกรอง 2Q/9Q"></textarea></div>
+            <div class="q-note">การแปลผล 2Q: ตอบ "ไม่" ทั้ง 2 ข้อ = ไม่มีภาวะซึมเศร้าในเบื้องต้น / ตอบ "ใช่" ข้อใดข้อหนึ่ง = ทำ 9Q ต่อ</div>
+          </div>
+        </div>
+        <div class="fg"><label class="lab">Caregiver burnout red flags</label><input type="text" data-k="cgb.burnout"></div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Family Physician Caregiver Plan — checklist</h3>
+      <div class="sbody">
+        <div class="cg">
+          <div class="lab">แผนการดูแลผู้ดูแล</div>
+          <label class="ck"><input type="checkbox" data-k="cgb.plan.assess"><span>ประเมินความสามารถ/ความพร้อมของผู้ดูแล</span></label>
+          <label class="ck"><input type="checkbox" data-k="cgb.plan.stress"><span>ค้นหา caregiver stress และ burnout risk</span></label>
+          <label class="ck"><input type="checkbox" data-k="cgb.plan.teach"><span>สอนการดูแลโรค ยา อาการปวด อาการฉุกเฉิน</span></label>
+          <label class="ck"><input type="checkbox" data-k="cgb.plan.support"><span>จัด social support / respite care</span></label>
+          <label class="ck"><input type="checkbox" data-k="cgb.plan.mental"><span>ประเมิน mental health + bereavement follow-up</span></label>
+          <label class="ck"><input type="checkbox" data-k="cgb.plan.reassess"><span>ประเมินซ้ำเมื่อผู้ป่วยทรุด / ภาระเพิ่มขึ้น</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Conspiracy of Silence / Difficult Communication</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="4" data-k="cgb.conspiracy" data-label="Conspiracy of Silence / Difficult Communication" placeholder="ความลับในครอบครัว การปกปิดโรค การคุยยาก — บันทึกและแนวทาง"></textarea></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PART 8 ============ -->
+<section id="sec-p8" data-title="PART 8 | Home Visit Progress">
+  <h2>PART 8 · บันทึกการติดตามครั้งนี้ <span class="no">ทุกครั้งที่เยี่ยม</span></h2>
+  <div class="sbody">
+    <div class="inrow">
+      <div class="fg"><label class="lab">Date / time / location</label><input type="text" data-k="prog.dt" placeholder="วัน/เวลา/สถานที่"></div>
+      <div class="fg"><label class="lab">ผู้ร่วมเยี่ยม</label><input type="text" data-k="prog.team"></div>
+      <div class="fg"><label class="lab">ผู้ป่วย / ผู้ดูแลที่อยู่ร่วม</label><input type="text" data-k="prog.present"></div>
+    </div>
+    <div class="fg"><label class="lab">Interval events — เหตุการณ์ระหว่างการเยี่ยมครั้งก่อน</label><textarea rows="2" data-k="prog.interval"></textarea></div>
+    <div class="fg"><label class="lab">Vital / function</label><input type="text" data-k="prog.vital" placeholder="BT BP HR RR SpO2 / PPS-ADL ที่เปลี่ยน"></div>
+    <div class="fg">
+      <label class="lab">Symptoms (0–10)</label>
+      <div class="rng"><span style="min-width:110px">Pain</span><input type="range" min="0" max="10" value="0" data-k="prog.sx.pain"><output>0</output></div>
+      <div class="rng"><span style="min-width:110px">Dyspnea</span><input type="range" min="0" max="10" value="0" data-k="prog.sx.dyspnea"><output>0</output></div>
+    </div>
+    <div class="fg"><label class="lab">อื่น ๆ</label><input type="text" data-k="prog.sx.other"></div>
+    <div class="fg"><label class="lab">Medication change</label><textarea rows="2" data-k="prog.med"></textarea></div>
+    <div class="fg"><label class="lab">Focused examination</label><textarea rows="2" data-k="prog.exam"></textarea></div>
+    <div class="fg"><label class="lab">Home / caregiver update</label><textarea rows="2" data-k="prog.home"></textarea></div>
+    <div class="fg"><label class="lab">Assessment</label><textarea rows="2" data-k="prog.assessment"></textarea></div>
+    <div class="fg"><label class="lab">Plan / education / referral</label><textarea rows="2" data-k="prog.plan"></textarea></div>
+    <div class="fg"><label class="lab">Next appointment / escalation</label><textarea rows="2" data-k="prog.next"></textarea></div>
+    <div class="fg"><label class="lab">ผู้บันทึก / signature</label><input type="text" data-k="prog.sign"></div>
+  </div>
+</section>
+
+<!-- ============ TRAJECTORY ============ -->
+<section id="sec-traj" data-title="Longitudinal Trajectory">
+  <h2>Longitudinal Trajectory <span class="no">อย่างน้อย 6 ครั้งเยี่ยม</span></h2>
+  <div class="sbody">
+    <div class="subblock" id="traj-block">
+      <h3>ตารางแนวโน้ม (วันที่ · PPS/ADL · Pain · Dyspnea · Intake · Bowel · Skin · Burden · มาตรการหลัก · ติดตาม)</h3>
+      <div class="sbody">
+        <div class="fg">
+          <div class="lab">ครั้งเยี่ยมที่ 1–6</div>
+          <div class="rep-body" data-rep="traj" data-fixed="6"></div>
+        </div>
+      </div>
+    </div>
+    <div class="subblock">
+      <h3>Closing Handover Summary</h3>
+      <div class="sbody">
+        <div class="fg"><textarea rows="4" data-k="traj.closing" data-label="Closing Handover Summary" placeholder="สรุปส่งเวร/ส่งต่อ: สถานะล่าสุด, ปัญหาคงค้าง, แผนต่อเนื่อง"></textarea></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<div class="footerbar">
+  <button type="button" class="btn" id="b-new" style="background:#e8eef4;color:var(--navy)">＋ ผู้ป่วยใหม่</button>
+  <button type="button" class="btn blue" id="b-md">Export Markdown</button>
+  <button type="button" class="btn blue" id="b-tex">Export LaTeX</button>
+  <button type="button" class="btn" id="b-print">🖨 พิมพ์</button>
+</div>
+
+<!-- ============ EXPORT MODAL ============ -->
+<div id="modal">
+  <div class="card">
+    <div class="head"><span id="m-title">Export</span><button type="button" class="x" id="m-close">✕</button></div>
+    <textarea id="m-out" spellcheck="false"></textarea>
+    <div class="hint" id="m-hint"></div>
+    <div class="foot">
+      <button type="button" class="btn blue" id="m-copy">📋 คัดลอก</button>
+      <button type="button" class="btn blue" id="m-dl">⬇ ดาวน์โหลด</button>
+      <button type="button" class="btn" id="m-close2">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TEMPLATES ============ -->
+<template class="row-tpl" data-tpl="family.members">
+  <div class="row-card">
+    <button type="button" class="rm" aria-label="ลบแถว">✕</button>
+    <div class="grid c3">
+      <input type="text" data-k="name" data-label="ชื่อ" placeholder="ชื่อ">
+      <input type="number" data-k="age" data-label="อายุ" placeholder="อายุ" inputmode="numeric">
+      <input type="text" data-k="rel" data-label="ความสัมพันธ์" placeholder="ความสัมพันธ์">
+      <input type="text" data-k="disease" data-label="โรคประจำตัว" placeholder="โรคประจำตัว">
+      <input type="text" data-k="role" data-label="บทบาทดูแล/โทร" placeholder="บทบาทดูแล/โทร" class="full" style="grid-column:1/-1">
+    </div>
+  </div>
+</template>
+
+<template class="row-tpl" data-tpl="investigations">
+  <div class="row-card">
+    <button type="button" class="rm" aria-label="ลบแถว">✕</button>
+    <div class="grid">
+      <input type="date" data-k="date" data-label="วันที่">
+      <select data-k="type" data-label="ชนิดการตรวจ">
+        <option value="">ชนิดการตรวจ</option>
+        <option>Imaging / CT / MRI</option>
+        <option>Echocardiogram</option>
+        <option>Chest X-ray</option>
+        <option>Pathology / Cytology</option>
+        <option>Other</option>
+      </select>
+      <input type="text" data-k="result" data-label="ผลสำคัญ/Impression" placeholder="ผลสำคัญ / Impression" class="full">
+      <input type="text" data-k="use" data-label="การนำไปใช้วางแผน" placeholder="การนำไปใช้วางแผน" class="full">
+    </div>
+  </div>
+</template>
+
+<template class="row-tpl" data-tpl="medications">
+  <div class="row-card">
+    <button type="button" class="rm" aria-label="ลบแถว">✕</button>
+    <div class="grid">
+      <input type="text" data-k="drug" data-label="ยา/ความแรง" placeholder="ยา / ความแรง">
+      <input type="text" data-k="dose" data-label="ขนาด/ทางให้" placeholder="ขนาดและทางให้">
+      <input type="text" data-k="freq" data-label="ความถี่" placeholder="ความถี่">
+      <input type="text" data-k="ind" data-label="ข้อบ่งชี้" placeholder="ข้อบ่งชี้">
+      <input type="date" data-k="changed" data-label="วันที่เปลี่ยน">
+      <input type="text" data-k="adh" data-label="Adherence/AE" placeholder="Adherence / AE">
+    </div>
+  </div>
+</template>
+
+<template class="row-tpl" data-tpl="problems">
+  <div class="row-card">
+    <button type="button" class="rm" aria-label="ลบแถว">✕</button>
+    <div class="grid">
+      <select data-k="domain" data-label="Domain">
+        <option value="">Domain</option>
+        <option>Biological</option>
+        <option>Psychological</option>
+        <option>Social / socioeconomic</option>
+        <option>Spiritual</option>
+        <option>Home safety</option>
+        <option>Caregiver</option>
+        <option>Family communication</option>
+      </select>
+      <input type="text" data-k="problem" data-label="Problem" placeholder="Problem">
+      <select data-k="urgency" data-label="Urgency">
+        <option value="">Urgency</option>
+        <option>เร่งด่วน</option>
+        <option>ปกติ</option>
+        <option>ติดตาม</option>
+      </select>
+      <input type="text" data-k="goal" data-label="Goal" placeholder="Goal">
+      <input type="text" data-k="plan" data-label="Plan/Responsible" placeholder="Plan / Responsible" class="full">
+      <input type="text" data-k="followup" data-label="Follow-up/Outcome" placeholder="Follow-up / Outcome" class="full">
+    </div>
+  </div>
+</template>
+
+<template class="row-tpl" data-tpl="traj">
+  <div class="row-card">
+    <button type="button" class="rm" aria-label="ลบแถว">✕</button>
+    <div class="grid c3">
+      <input type="text" data-k="date" data-label="Date" placeholder="วันที่">
+      <input type="text" data-k="pps" data-label="PPS/ADL" placeholder="PPS/ADL">
+      <input type="number" data-k="pain" data-label="Pain" placeholder="Pain" inputmode="numeric" min="0" max="10">
+      <input type="number" data-k="dyspnea" data-label="Dyspnea" placeholder="Dys" inputmode="numeric" min="0" max="10">
+      <input type="text" data-k="intake" data-label="Intake" placeholder="Intake">
+      <input type="text" data-k="bowel" data-label="Bowel" placeholder="Bowel">
+      <input type="text" data-k="skin" data-label="Skin/wound" placeholder="Skin">
+      <input type="text" data-k="burden" data-label="Caregiver burden" placeholder="Burden">
+      <input type="text" data-k="main" data-label="Main intervention" placeholder="มาตรการหลัก" class="full">
+      <input type="text" data-k="followup" data-label="Follow-up" placeholder="Follow-up / วันนัด" class="full">
+    </div>
+  </div>
+</template>
+
+<script>
+"use strict";
+/* ============ constants ============ */
+var KEY = "homevisit_family_folder_v1";
+
+/* ============ utils ============ */
+function $(s, r){ return (r||document).querySelector(s); }
+function $$(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+
+function setPath(obj, path, val){
+  var parts = path.split("."), cur = obj;
+  for (var i=0; i<parts.length-1; i++){
+    var p = parts[i];
+    if (!cur[p] || typeof cur[p] !== "object") cur[p] = {};
+    cur = cur[p];
+  }
+  cur[parts[parts.length-1]] = val;
+}
+function getPath(obj, path){
+  var parts = path.split("."), cur = obj;
+  for (var i=0; i<parts.length; i++){
+    if (cur == null) return undefined;
+    cur = cur[parts[i]];
+  }
+  return cur;
+}
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function escTex(s){
+  return String(s == null ? "" : s)
+    .replace(/\\/g,"\\textbackslash{}")
+    .replace(/([&%$#_{}~^])/g, function(m){ return "\\"+m; });
+}
+function dateStr(){
+  var d = new Date();
+  return d.getFullYear()+"-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") +
+    " " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+}
+
+/* ============ repeaters ============ */
+function templateFor(name){
+  var t = document.querySelector('template.row-tpl[data-tpl="'+name+'"]');
+  return t ? t.content : null;
+}
+function addRow(name, data){
+  var body = document.querySelector('.rep-body[data-rep="'+name+'"]');
+  if (!body) return null;
+  var tpl = templateFor(name);
+  if (!tpl) return null;
+  var node = document.importNode(tpl, true);
+  body.appendChild(node);
+  var row = body.lastElementChild;
+  if (data){
+    $$('[data-k]', row).forEach(function(el){
+      var k = el.getAttribute("data-k");
+      var v = data[k];
+      if (v === undefined || v === null) return;
+      if (el.type === "checkbox") el.checked = !!v; else el.value = v;
+    });
+  }
+  return row;
+}
+function initRepeaters(){
+  $$('.rep-body[data-rep]').forEach(function(body){
+    var name = body.getAttribute("data-rep");
+    var fixed = body.getAttribute("data-fixed");
+    var n = fixed ? parseInt(fixed,10) : 1;
+    for (var i=0; i<n; i++) addRow(name, null);
+  });
+}
+
+/* ============ collect / restore ============ */
+function collect(){
+  var data = {};
+  $$('[data-k]').forEach(function(el){
+    if (el.closest('.row-card')) return; // handled by rows
+    var v;
+    if (el.type === "checkbox") v = el.checked;
+    else if (el.type === "radio"){
+      if (!el.checked) return; // ข้ามตัวเลือกที่ไม่ได้เลือก — กันทับค่าที่เลือก
+      v = el.value;
+    }
+    else v = el.value;
+    setPath(data, el.getAttribute("data-k"), v);
+  });
+  $$('.rep-body[data-rep]').forEach(function(body){
+    var name = body.getAttribute("data-rep");
+    var rows = $$('.row-card', body);
+    var arr = [];
+    rows.forEach(function(row){
+      var o = {};
+      var nonempty = false;
+      $$('[data-k]', row).forEach(function(el){
+        var k = el.getAttribute("data-k");
+        var v = (el.type === "checkbox") ? el.checked : el.value;
+        if (el.type === "checkbox" ? v : String(v).trim() !== "") nonempty = true;
+        o[k] = v;
+      });
+      if (nonempty) arr.push(o);
+    });
+    setPath(data, name, arr);
+  });
+  return data;
+}
+function restore(data){
+  $$('[data-k]').forEach(function(el){
+    if (el.closest('.row-card')) return;
+    var v = getPath(data, el.getAttribute("data-k"));
+    if (v === undefined) return;
+    if (el.type === "radio") el.checked = (String(v) === el.value);
+    else if (el.type === "checkbox") el.checked = !!v;
+    else el.value = (v == null ? "" : v);
+  });
+  $$('.rep-body[data-rep]').forEach(function(body){
+    var name = body.getAttribute("data-rep");
+    var arr = getPath(data, name) || [];
+    var rows = $$('.row-card', body);
+    rows.forEach(function(row, i){
+      if (arr[i]) $$('[data-k]', row).forEach(function(el){
+        var v = arr[i][el.getAttribute("data-k")];
+        if (v === undefined) return;
+        if (el.type === "checkbox") el.checked = !!v; else el.value = (v == null ? "" : v);
+      });
+    });
+    for (var j = rows.length; j < arr.length; j++) addRow(name, arr[j]);
+  });
+}
+
+/* ============ save / status / empty classes ============ */
+var statusEl = $("#status");
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(collect())); }
+  catch(e){ statusEl.textContent = "⚠ บันทึกไม่สำเร็จ"; return; }
+  statusEl.textContent = "บันทึกแล้ว " + new Date().toLocaleTimeString("th-TH", {hour:"2-digit", minute:"2-digit"});
+  updateEmptyClasses();
+}
+var saveTimer = null;
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(save, 250); }
+function updateEmptyClasses(){
+  $$('section').forEach(function(sec){
+    var has = false;
+    $$('input, textarea, select', sec).forEach(function(el){
+      if (el.closest('template')) return;
+      if (el.type === "checkbox" || el.type === "radio") { if (el.checked) has = true; }
+      else if (String(el.value).trim() !== "") has = true;
+    });
+    sec.classList.toggle("empty", !has);
+  });
+}
+
+/* ============ tick button state (.on fallback for :has) ============ */
+function refreshCk(){
+  $$(".ck").forEach(function(lb){
+    var inp = lb.querySelector("input");
+    lb.classList.toggle("on", !!(inp && inp.checked));
+  });
+}
+
+/* ============ questionnaires: auto-score (Zarit / 2Q / 9Q) ============ */
+var ZARIT_LABELS = ["ไม่เคย", "นาน ๆ ครั้ง", "บางครั้ง", "ค่อนข้างบ่อย", "เกือบทุกวัน"];
+var DEP_LABELS = ["ไม่มีเลย", "มีบางวัน (1–7 วัน)", "มีบ่อย (ครึ่งวัน)", "เกือบทุกวัน"];
+
+function qzUpdateZarit(){
+  var root = $("#zarit-box");
+  if (!root) return;
+  var sum = 0, parts = [], any = false;
+  for (var i = 1; i <= 22; i++){
+    var el = root.querySelector('input[data-k="cgb.zarit.q' + i + '"]:checked');
+    if (el){ var v = parseInt(el.value, 10) || 0; sum += v; any = true; parts.push(i + "." + ZARIT_LABELS[v]); }
+    else parts.push(i + ".–");
+  }
+  var elScore = $('[data-k="cgb.zarit.score"]'), elInt = $('[data-k="cgb.zarit.interpret"]'), elAns = $('[data-k="cgb.zarit.answers"]');
+  if (elScore) elScore.value = any ? sum : "";
+  if (elInt) elInt.value = any
+    ? (sum <= 20 ? "ไม่มีภาระ / ภาระน้อย (0–20)" : sum <= 40 ? "ภาระปานกลาง (21–40)" : sum <= 60 ? "ภาระมาก (41–60)" : "ภาระมากที่สุด (61–88)")
+    : "";
+  if (elAns) elAns.value = any ? parts.join("  •  ") : "";
+}
+function depUpdate(){
+  var root = $("#dep-box");
+  if (!root) return;
+  var e1 = root.querySelector('input[data-k="cgb.dep.q1"]:checked'),
+      e2 = root.querySelector('input[data-k="cgb.dep.q2"]:checked');
+  var q1v = e1 ? e1.value : "", q2v = e2 ? e2.value : "";
+  var need9 = (q1v === "1" || q2v === "1");
+  var parts = [];
+  if (q1v !== "") parts.push("2Q1: " + (q1v === "1" ? "ใช่" : "ไม่"));
+  if (q2v !== "") parts.push("2Q2: " + (q2v === "1" ? "ใช่" : "ไม่"));
+  var sum = 0, p9 = [], any9 = false;
+  for (var i = 1; i <= 9; i++){
+    var el = root.querySelector('input[data-k="cgb.dep.q9_' + i + '"]:checked');
+    if (el){ var v = parseInt(el.value, 10) || 0; sum += v; any9 = true; p9.push(i + "." + DEP_LABELS[v]); }
+    else p9.push(i + ".–");
+  }
+  var q9 = root.querySelector('input[data-k="cgb.dep.q9_9"]:checked');
+  var q9risk = q9 && parseInt(q9.value, 10) >= 1;
+  if (need9){
+    parts.push("9Q รวม: " + sum + "/27 " +
+      (sum <= 6 ? "(ปกติ 0–6)" : sum <= 12 ? "(ซึมเศร้าน้อย 7–12)" : sum <= 18 ? "(ปานกลาง 13–18)" : "(รุนแรง ≥19)"));
+    if (q9risk) parts.push("⚠ ข้อ 9 ≥1 → ประเมินความเสี่ยงฆ่าตัวตาย + ส่งต่อ");
+  } else if (q1v !== "" && q2v !== ""){
+    parts.push("2Q: ไม่เข้าข่าย (ตอบไม่ทั้ง 2 ข้อ) → ไม่ต้องทำ 9Q");
+  }
+  var elS = $('[data-k="cgb.dep.score"]'), elI = $('[data-k="cgb.dep.interpret"]'), elA = $('[data-k="cgb.dep.summary"]');
+  if (elS) elS.value = need9 && any9 ? sum : "";
+  if (elI) elI.value = need9 && any9
+    ? (sum <= 6 ? "ปกติ (0–6)" : sum <= 12 ? "ซึมเศร้าน้อย (7–12)" : sum <= 18 ? "ซึมเศร้าปานกลาง (13–18)" : "ซึมเศร้ารุนแรง (≥19)") + (q9risk ? " ⚠ เสี่ยงฆ่าตัวตาย" : "")
+    : (!need9 && q1v !== "" && q2v !== "" ? "ปกติ — ไม่เข้าข่าย 2Q" : "");
+  if (elA) elA.value = parts.join("  •  ") + (need9 ? "  |  9Q รายข้อ: " + p9.join(" ") : "");
+}
+
+/* ============ export ============ */
+function collectCg(cg){
+  var labEl = $(".lab", cg);
+  var lab = labEl ? labEl.textContent.trim() : "";
+  var vals = $$("input:checked", cg).map(function(i){ return i.parentElement.textContent.trim(); });
+  return { label: lab, vals: vals };
+}
+function emitField(fg, mode){
+  var labEl = $(".lab", fg);
+  var lab = labEl ? labEl.textContent.trim() : "";
+  var rep = $(".rep-body", fg);
+  var out = [];
+  if (rep){
+    var parts = [];
+    $$(".row-card", rep).forEach(function(row){
+      var rowParts = [];
+      $$("[data-k]", row).forEach(function(el){
+        var lbl = el.getAttribute("data-label") || el.placeholder || "ช่อง";
+        if (el.type === "checkbox"){
+          if (el.checked) rowParts.push(lbl + ": ✓");
+          return;
+        }
+        if (String(el.value).trim() !== "") rowParts.push(lbl + ": " + el.value);
+      });
+      if (rowParts.length) parts.push(rowParts);
+    });
+    if (parts.length){
+      if (mode === "md"){
+        out.push("- **" + lab + ":**");
+        parts.forEach(function(p, i){ out.push("  - (" + (i+1) + ") " + p.join(" · ")); });
+      } else {
+        out.push("\\textbf{" + escTex(lab) + "}:");
+        parts.forEach(function(p, i){ out.push("(" + (i+1) + ") " + escTex(p.join(" · ")) + " \\\\"); });
+      }
+    }
+    return out;
+  }
+  var el = fg.querySelector("input, textarea, select");
+  if (!el) return out;
+  if (el.type === "range"){
+    if (!el.getAttribute("data-touched") && parseInt(el.value,10) === 0) return out;
+    if (mode === "md") out.push("- **" + lab + ":** " + el.value + "/10");
+    else out.push("\\textbf{" + escTex(lab) + "}: " + el.value + "/10 \\\\");
+    return out;
+  }
+  if (el.type === "checkbox") return out;
+  var v = String(el.value).trim();
+  if (v === "") return out;
+  var lbl = lab || el.getAttribute("data-label") || el.placeholder || "";
+  if (mode === "md") out.push("- **" + lbl + ":** " + v);
+  else out.push("\\textbf{" + escTex(lbl) + "}: " + escTex(v) + " \\\\");
+  return out;
+}
+function emitFieldLines(container, fmt){
+  var L = [];
+  $$(".fg, .cg", container).forEach(function(el){
+    if (el.classList.contains("cg")){
+      var cg = collectCg(el);
+      if (cg.vals.length){
+        if (fmt === "tex") L.push("\\textbf{" + escTex(cg.label) + "}: " + escTex(cg.vals.join(", ")) + " \\\\");
+        else L.push("- **" + cg.label + ":** " + cg.vals.join(", "));
+      }
+      return;
+    }
+    L = L.concat(emitField(el, fmt));
+  });
+  return L;
+}
+function secTitle(sec){
+  var h = $(":scope > h2", sec);
+  if (!h) return sec.getAttribute("data-title") || sec.id;
+  return h.childNodes[0].textContent.trim() || sec.getAttribute("data-title") || sec.id;
+}
+function subTitle(sb){
+  var h = $(":scope > h3", sb);
+  return h ? h.childNodes[0].textContent.trim() : sb.getAttribute("data-title") || "";
+}
+function trajTable(fmt){
+  var rows = (collect().traj || []).filter(function(r){
+    return Object.keys(r).some(function(k){ return String(r[k]).trim() !== ""; });
+  });
+  var L = [];
+  if (!rows.length) return L;
+  if (fmt === "md"){
+    L.push("| วันที่ | PPS/ADL | Pain | Dys | Intake | Bowel | Skin | Burden | มาตรการหลัก | ติดตาม |");
+    L.push("|---|---|---|---|---|---|---|---|---|---|");
+    rows.forEach(function(r){
+      L.push("| " + [r.date||"", r.pps||"", r.pain||"", r.dyspnea||"", r.intake||"", r.bowel||"", r.skin||"", r.burden||"", r.main||"", r.followup||""].map(esc).join(" | ") + " |");
+    });
+  } else {
+    L.push("\\begin{small}");
+    L.push("\\begin{tabularx}{\\textwidth}{|c|c|c|c|c|c|c|c|X|X|}\\hline");
+    L.push("\\rowcolor{navy}\\color{white}Date & PPS/ADL & Pain & Dys & Intake & Bowel & Skin & Burden & Main intervention & Follow-up \\\\ \\hline");
+    rows.forEach(function(r){
+      L.push([r.date||"", r.pps||"", r.pain||"", r.dyspnea||"", r.intake||"", r.bowel||"", r.skin||"", r.burden||"", r.main||"", r.followup||""].map(escTex).join(" & ") + " \\\\ \\hline");
+    });
+    L.push("\\end{tabularx}");
+    L.push("\\end{small}");
+  }
+  return L;
+}
+function emitSection(sec, fmt){
+  var L = [];
+  var subs = $$(":scope > .sbody > .subblock", sec);
+  if (subs.length){
+    subs.forEach(function(sb){
+      var t = subTitle(sb);
+      if (fmt === "tex") L.push("\\subsection*{" + escTex(t) + "}");
+      else L.push("### " + t);
+      if (sec.id === "sec-traj" && sb.id === "traj-block"){
+        L = L.concat(trajTable(fmt));
+      } else {
+        L = L.concat(emitFieldLines(sb, fmt));
+      }
+    });
+  } else {
+    L = L.concat(emitFieldLines(sec, fmt));
+  }
+  return L;
+}
+function patientHead(){
+  var d = collect();
+  var p = d.patient || {};
+  var parts = [];
+  if (p.name) parts.push("ชื่อ: " + p.name);
+  if (p.hn) parts.push("HN: " + p.hn);
+  if (p.cid) parts.push("CID: " + p.cid);
+  if (p.birth || p.age) parts.push("เกิด/อายุ: " + (p.birth || "") + (p.age ? " (" + p.age + " ปี)" : ""));
+  if (p.sex) parts.push("เพศ: " + p.sex);
+  if (p.firstvisit) parts.push("เยี่ยมครั้งแรก: " + p.firstvisit);
+  return parts;
+}
+function buildMd(){
+  var L = [];
+  L.push("# แฟ้มเยี่ยมบ้าน — สรุปข้อมูลผู้ป่วย");
+  L.push("");
+  var hd = patientHead();
+  if (hd.length) L.push("**" + hd.join(" · ") + "**");
+  L.push("_สร้างเมื่อ " + dateStr() + "_");
+  L.push("");
+  $$("section").forEach(function(sec){
+    L.push("## " + secTitle(sec));
+    L.push("");
+    L = L.concat(emitSection(sec, "md"));
+    L.push("");
+  });
+  return L.join("\n");
+}
+function buildTex(){
+  var L = [];
+  L.push("% ===================================================");
+  L.push("% แฟ้มเยี่ยมบ้าน — สรุปข้อมูลผู้ป่วย (จากฟอร์ม iPad)");
+  L.push("% สร้างไฟล์ใหม่ใน Overleaf (Compiler: XeLaTeX) โดยวางไว้ใน project");
+  L.push("% ที่มี fonts/NotoSansThai-Regular.ttf แล้ว compile — ข้อมูลจะแสดงเป็นภาษาไทย");
+  L.push("% ===================================================");
+  L.push("\\documentclass[12pt,a4paper]{article}");
+  L.push("\\usepackage[a4paper,margin=1.5cm]{geometry}");
+  L.push("\\usepackage{fontspec}");
+  L.push("\\usepackage{polyglossia}");
+  L.push("\\setdefaultlanguage{thai}");
+  L.push("\\setotherlanguage{english}");
+  L.push("\\setmainfont{DejaVu Sans}");
+  L.push("\\IfFileExists{fonts/NotoSansThai-Regular.ttf}{\\newfontfamily\\thaifont[Path=fonts/]{NotoSansThai-Regular.ttf}}{\\newfontfamily\\thaifont{Noto Sans Thai}}");
+  L.push("\\newfontfamily\\englishfont{DejaVu Sans}");
+  L.push("\\usepackage{ucharclasses}");
+  L.push("\\setTransitionsForLatin{\\englishfont}{\\thaifont}");
+  L.push("\\usepackage{tabularx}");
+  L.push("\\usepackage[table]{xcolor}");
+  L.push("\\definecolor{navy}{HTML}{1F4E79}");
+  L.push("\\usepackage{enumitem}");
+  L.push("\\setlength{\\parindent}{0pt}");
+  L.push("\\begin{document}");
+  L.push("");
+  L.push("\\begin{center}{\\Huge\\textcolor{navy}{\\textbf{แฟ้มเยี่ยมบ้าน}}}\\\\[4pt]{\\Large สรุปข้อมูลผู้ป่วย — Digital Home Visit}\\end{center}");
+  L.push("");
+  var hd = patientHead();
+  if (hd.length){
+    L.push("\\begin{center}\\small " + hd.map(function(s){ return escTex(s); }).join(" \\quad ") + "\\end{center}");
+    L.push("");
+  }
+  $$("section").forEach(function(sec){
+    L.push("\\section*{" + escTex(secTitle(sec)) + "}");
+    L.push("");
+    var lines = emitSection(sec, "tex");
+    lines.forEach(function(line){
+      if (line === "") return;
+      L.push(line);
+      L.push("");
+    });
+    L.push("");
+  });
+  L.push("\\end{document}");
+  return L.join("\n");
+}
+
+/* ============ modal / export actions ============ */
+var modal = $("#modal"), mOut = $("#m-out"), mTitle = $("#m-title"), mHint = $("#m-hint");
+function openModal(fmt){
+  var content = "", fname = "", hint = "";
+  if (fmt === "md"){ content = buildMd(); fname = "homevisit_summary.md"; hint = "เอาไปวางในสไลด์ (Marp/Google Slides/Canva) หรือโน้ตสรุป"; }
+  else if (fmt === "tex"){ content = buildTex(); fname = "homevisit_summary.tex"; hint = "สร้างไฟล์ใหม่ใน Overleaf (Compiler: XeLaTeX) แล้ววางเนื้อหานี้ — project ต้องมี fonts/ เหมือนเดิม"; }
+  else { content = JSON.stringify(collect(), null, 2); fname = "homevisit_data.json"; hint = "ข้อมูลดิบสำหรับสำรอง/นำเข้าใหม่"; }
+  mOut.value = content;
+  mTitle.textContent = "Export — " + (fmt === "md" ? "Markdown สรุป" : fmt === "tex" ? "LaTeX (Overleaf)" : "JSON");
+  mHint.textContent = hint;
+  mOut.setAttribute("data-fname", fname);
+  modal.classList.add("open");
+  mOut.scrollTop = 0;
+}
+function closeModal(){ modal.classList.remove("open"); }
+function doCopy(){
+  mOut.focus(); mOut.select();
+  var ok = false;
+  try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+  if (!ok && navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(mOut.value).then(function(){ flashCopy(true); }, function(){ flashCopy(false); });
+  } else if (ok){ flashCopy(true); } else { flashCopy(false); }
+}
+function flashCopy(ok){
+  var b = $("#m-copy");
+  var old = b.textContent;
+  b.textContent = ok === false ? "⚠ ลองเลือกข้อความเอง" : "✓ คัดลอกแล้ว";
+  setTimeout(function(){ b.textContent = old; }, 1600);
+}
+function doDownload(){
+  var fname = mOut.getAttribute("data-fname") || "export.txt";
+  var mime = fname.endsWith(".tex") ? "text/x-tex" : fname.endsWith(".json") ? "application/json" : "text/markdown";
+  var blob = new Blob([mOut.value], {type: mime});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = fname;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 600);
+}
+function doPrint(){
+  updateEmptyClasses();
+  document.body.classList.add("print-filled");
+  window.print();
+}
+
+/* ============ new patient ============ */
+function newPatient(){
+  if (!confirm("เริ่มผู้ป่วยใหม่? ข้อมูลที่กรอกทั้งหมดจะถูกล้าง (แนะนำให้ Export JSON สำรองก่อน)")) return;
+  localStorage.removeItem(KEY);
+  $$("section").forEach(function(sec){
+    $$("input, textarea, select", sec).forEach(function(el){
+      if (el.closest("template")) return;
+      if (el.type === "checkbox" || el.type === "radio") el.checked = false;
+      else el.value = "";
+    });
+  });
+  $$(".rep-body[data-rep]").forEach(function(body){
+    $$(".row-card", body).forEach(function(r){ r.remove(); });
+    var name = body.getAttribute("data-rep");
+    var fixed = body.getAttribute("data-fixed");
+    var n = fixed ? parseInt(fixed,10) : 1;
+    for (var i=0; i<n; i++) addRow(name, null);
+  });
+  $$("output").forEach(function(o){ o.textContent = "0"; });
+  qzUpdateZarit(); depUpdate(); refreshCk();
+  statusEl.textContent = "ล้างแล้ว — พร้อมผู้ป่วยใหม่";
+  updateEmptyClasses();
+}
+
+/* ============ events ============ */
+document.addEventListener("input", function(e){
+  var t = e.target;
+  if (t && t.type === "range"){
+    t.setAttribute("data-touched", "1");
+    var o = t.nextElementSibling;
+    if (o && o.tagName === "OUTPUT") o.textContent = t.value;
+  }
+  scheduleSave();
+});
+document.addEventListener("change", function(){ qzUpdateZarit(); depUpdate(); refreshCk(); scheduleSave(); });
+document.addEventListener("click", function(e){
+  var t = e.target;
+  if (t.classList && t.classList.contains("rm")){
+    var row = t.closest(".row-card");
+    if (row) row.remove();
+    scheduleSave();
+  }
+  if (t.classList && t.classList.contains("add")){
+    addRow(t.getAttribute("data-add"), null);
+    scheduleSave();
+  }
+  if (t.closest && t.closest("#nav button")){
+    var id = t.closest("#nav button").getAttribute("data-goto");
+    var sec = document.getElementById(id);
+    if (sec) sec.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+});
+$("#b-new").addEventListener("click", newPatient);
+$("#b-md").addEventListener("click", function(){ openModal("md"); });
+$("#b-tex").addEventListener("click", function(){ openModal("tex"); });
+$("#b-print").addEventListener("click", doPrint);
+$("#m-copy").addEventListener("click", doCopy);
+$("#m-dl").addEventListener("click", doDownload);
+$("#m-close").addEventListener("click", closeModal);
+$("#m-close2").addEventListener("click", closeModal);
+window.addEventListener("afterprint", function(){ document.body.classList.remove("print-filled"); });
+modal.addEventListener("click", function(e){ if (e.target === modal) closeModal(); });
+
+/* ============ boot ============ */
+(function boot(){
+  initRepeaters();
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ saved = null; }
+  if (saved) restore(saved);
+  qzUpdateZarit(); depUpdate(); refreshCk();
+  updateEmptyClasses();
+  statusEl.textContent = saved ? "โหลดข้อมูลเดิมแล้ว" : "พร้อมบันทึกอัตโนมัติ";
+  $$("input[type=range]").forEach(function(r){
+    var o = r.nextElementSibling;
+    if (o && o.tagName === "OUTPUT") o.textContent = r.value;
+  });
+})();
+</script>
+</body>
+</html>
